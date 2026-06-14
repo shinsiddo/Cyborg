@@ -1,0 +1,4012 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cyborg-X Premium Landing Page</title>
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
+    body{
+      background:#02040a;
+      color:#f8fafc;
+      overflow-x:hidden;
+      user-select: none;
+      position: relative;
+    }
+    body.custom-cursor-active {
+      cursor: none;
+    }
+    body.custom-cursor-active a,
+    body.custom-cursor-active button,
+    body.custom-cursor-active .btn,
+    body.custom-cursor-active .mini-airship {
+      cursor: none;
+    }
+
+    /* Mini Cyborg Cursor */
+    #mini-cyborg-cursor {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 44px;
+      height: 52px;
+      pointer-events: none;
+      z-index: 99999;
+      transform: translate(-50%, -50%);
+      transition: transform 0.08s ease-out;
+      filter: drop-shadow(0 0 6px rgba(255, 0, 127, 0.5)) drop-shadow(0 0 10px rgba(0, 247, 255, 0.35));
+      will-change: transform, left, top;
+    }
+    #mini-cyborg-cursor.clicking {
+      transform: translate(-50%, -50%) scale(0.88);
+    }
+    #mini-cyborg-cursor.firing {
+      filter: drop-shadow(0 0 12px rgba(255, 0, 127, 0.9)) drop-shadow(0 0 20px rgba(0, 247, 255, 0.7));
+    }
+    #mini-cyborg-cursor.firing .monocle-lens {
+      fill: #fff;
+      filter: drop-shadow(0 0 6px #ff007f);
+    }
+    #mini-cyborg-cursor .cyborg-svg {
+      width: 100%;
+      height: 100%;
+    }
+    @keyframes cyborgEyePulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.55; }
+    }
+    #mini-cyborg-cursor .eye-cyan {
+      animation: cyborgEyePulse 1.2s ease-in-out infinite;
+    }
+    #mini-cyborg-cursor.firing .eye-cyan {
+      animation: laserEyeFlash 0.25s ease-out;
+    }
+    @keyframes laserEyeFlash {
+      0%, 100% { opacity: 1; fill: #00f7ff; }
+      50% { opacity: 1; fill: #fff; }
+    }
+
+    /* Cyborg laser beam */
+    .cyborg-laser {
+      position: fixed;
+      height: 4px;
+      transform-origin: 0 50%;
+      pointer-events: none;
+      z-index: 99997;
+      opacity: 0;
+    }
+    .cyborg-laser-core {
+      position: absolute;
+      inset: 0;
+      border-radius: 2px;
+      background: linear-gradient(90deg,
+        rgba(255, 0, 127, 0.95) 0%,
+        #ffffff 35%,
+        #00f7ff 65%,
+        rgba(0, 247, 255, 0.15) 100%);
+      box-shadow: 0 0 6px #ff007f, 0 0 14px #00f7ff, 0 0 22px rgba(255, 255, 255, 0.8);
+      animation: laserCorePulse 0.15s ease-in-out infinite alternate;
+    }
+    .cyborg-laser-glow {
+      position: absolute;
+      top: -5px;
+      left: 0;
+      right: 0;
+      height: 14px;
+      background: linear-gradient(90deg, rgba(255, 0, 127, 0.55), rgba(0, 247, 255, 0.45));
+      filter: blur(5px);
+      border-radius: 4px;
+    }
+    .cyborg-laser.laser-active {
+      opacity: 1;
+      animation: laserExtend 0.22s cubic-bezier(0.2, 0.9, 0.3, 1) forwards;
+    }
+    @keyframes laserExtend {
+      0% { transform: rotate(var(--laser-angle)) scaleX(0); opacity: 1; }
+      75% { transform: rotate(var(--laser-angle)) scaleX(1); opacity: 1; }
+      100% { transform: rotate(var(--laser-angle)) scaleX(1); opacity: 0; }
+    }
+    @keyframes laserCorePulse {
+      0% { filter: brightness(1); }
+      100% { filter: brightness(1.4); }
+    }
+    .laser-impact {
+      position: fixed;
+      width: 28px;
+      height: 28px;
+      transform: translate(-50%, -50%) scale(0);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 99997;
+      background: radial-gradient(circle, #fff 0%, #ff007f 35%, rgba(0, 247, 255, 0.4) 60%, transparent 72%);
+      animation: laserImpactFlash 0.35s ease-out forwards;
+    }
+    @keyframes laserImpactFlash {
+      0% { transform: translate(-50%, -50%) scale(0.2); opacity: 1; }
+      50% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+      100% { transform: translate(-50%, -50%) scale(1.8); opacity: 0; }
+    }
+    /* Cyber Grid Background Overlay */
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background-image: 
+        linear-gradient(rgba(0, 247, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 247, 255, 0.02) 1px, transparent 1px);
+      background-size: 40px 40px;
+      background-position: center;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:30px 10%;
+      background:linear-gradient(to bottom, rgba(2,4,10,0.9), rgba(2,4,10,0.4));
+      backdrop-filter:blur(12px);
+      -webkit-backdrop-filter:blur(12px);
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid rgba(0, 247, 255, 0.05);
+    }
+    .logo{
+      font-size:24px;
+      font-weight:900;
+      letter-spacing: 4px;
+      color:#00f7ff;
+      text-shadow:0 0 15px rgba(0,247,255,0.6);
+      animation: logoPulse 3s ease-in-out infinite alternate;
+    }
+    
+    @keyframes logoPulse {
+      0% { text-shadow: 0 0 8px rgba(0,247,255,0.3); }
+      100% { text-shadow: 0 0 20px rgba(0,247,255,0.8), 0 0 30px rgba(0,247,255,0.4); }
+    }
+
+    nav a{
+      color:#94a3b8;
+      margin-left:30px;
+      text-decoration:none;
+      font-weight: 600;
+      font-size: 14px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition:0.3s ease;
+      position: relative;
+    }
+    nav a::after {
+      content: '';
+      position: absolute;
+      bottom: -6px; left: 0; width: 0; height: 2px;
+      background: #00f7ff;
+      box-shadow: 0 0 8px #00f7ff;
+      transition: width 0.3s ease;
+    }
+    nav a:hover::after {
+      width: 100%;
+    }
+    nav a:hover{
+      color:#00f7ff;
+      text-shadow:0 0 10px rgba(0,247,255,0.4);
+    }
+    .hero{
+      min-height:100vh;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding: 0 10%;
+      background: radial-gradient(circle at 80% 50%, #0b1528 0%, #02040a 70%);
+      position: relative;
+    }
+    .hero-content{
+      max-width:540px;
+      z-index: 5;
+    }
+    
+    /* Advanced Cyber Glitch Title Text Effect */
+    .hero h1{
+      font-size:64px;
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom:25px;
+      color:#fff;
+      position: relative;
+      background: linear-gradient(to right, #fff 40%, #ff007f);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero h1::before, .hero h1::after {
+      content: 'Upgrade Your Biological Limits';
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: #02040a;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero h1::before {
+      left: 2px;
+      text-shadow: -2px 0 #ff00ff;
+      clip: rect(44px, 450px, 56px, 0);
+      animation: glitch-anim 5s infinite linear alternate-reverse;
+    }
+    .hero h1::after {
+      left: -2px;
+      text-shadow: -2px 0 #00f7ff, 0 2px #ff00ff;
+      clip: rect(85px, 450px, 140px, 0);
+      animation: glitch-anim2 5s infinite linear alternate-reverse;
+    }
+
+    @keyframes glitch-anim {
+      0% { clip: rect(31px, 9999px, 94px, 0); }
+      10% { clip: rect(112px, 9999px, 76px, 0); }
+      20% { clip: rect(85px, 9999px, 5px, 0); }
+      30% { clip: rect(27px, 9999px, 115px, 0); }
+      40% { clip: rect(73px, 9999px, 29px, 0); }
+      50% { clip: rect(118px, 9999px, 142px, 0); }
+      60% { clip: rect(44px, 9999px, 51px, 0); }
+      70% { clip: rect(2px, 9999px, 90px, 0); }
+      80% { clip: rect(61px, 9999px, 134px, 0); }
+      90% { clip: rect(102px, 9999px, 19px, 0); }
+      100% { clip: rect(94px, 9999px, 81px, 0); }
+    }
+    @keyframes glitch-anim2 {
+      0% { clip: rect(76px, 9999px, 116px, 0); }
+      11% { clip: rect(43px, 9999px, 6px, 0); }
+      22% { clip: rect(122px, 9999px, 57px, 0); }
+      33% { clip: rect(9px, 9999px, 113px, 0); }
+      44% { clip: rect(131px, 9999px, 82px, 0); }
+      55% { clip: rect(45px, 9999px, 128px, 0); }
+      66% { clip: rect(22px, 9999px, 14px, 0); }
+      77% { clip: rect(104px, 9999px, 79px, 0); }
+      88% { clip: rect(61px, 9999px, 119px, 0); }
+      100% { clip: rect(3px, 9999px, 94px, 0); }
+    }
+
+    .hero p{
+      font-size:18px;
+      color:#94a3b8;
+      margin-bottom:40px;
+      line-height:1.7;
+    }
+    
+    /* Premium Interactive Button */
+    .btn{
+      display:inline-block;
+      padding:18px 45px;
+      background: transparent;
+      color:#ff007f;
+      border: 2px solid #ff007f;
+      border-radius:4px;
+      text-decoration:none;
+      font-weight:700;
+      font-size: 15px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      transition: all 0.3s cubic-bezier(0.2, 1, 0.3, 1);
+      box-shadow: 0 0 15px rgba(255,0,127,0.15), inset 0 0 15px rgba(255,0,127,0.15);
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,0,127,0.4), transparent);
+      transition: 0.5s;
+    }
+    .btn:hover::before {
+      left: 100%;
+    }
+    .btn:hover{
+      color: #02040a;
+      background:#ff007f;
+      box-shadow:0 0 35px rgba(255,0,127,0.6);
+      transform: translateY(-2px);
+    }
+    
+    /* High-Energy Disruption Glow Overrides */
+    .btn.energized {
+      animation: buttonElectricSurge 0.6s cubic-bezier(0.15, 0.85, 0.3, 1) forwards;
+    }
+
+    @keyframes buttonElectricSurge {
+      0% {
+        background: #fff;
+        color: #02040a;
+        border-color: #fff;
+        box-shadow: 0 0 50px #fff, 0 0 100px #ff007f, inset 0 0 30px #ff007f;
+        transform: scale(0.95);
+      }
+      20% {
+        background: #ff007f;
+        box-shadow: 0 0 80px #ff007f, 0 0 150px #00f7ff;
+        transform: scale(1.08) cubic-bezier(0.1, 1.4, 0.1, 1.4);
+      }
+      100% {
+        background: transparent;
+        color: #ff007f;
+        border-color: #ff007f;
+        box-shadow: 0 0 15px rgba(255,0,127,0.15), inset 0 0 15px rgba(255,0,127,0.15);
+        transform: scale(1);
+      }
+    }
+    
+    /* Screen Shake effect — applied to main-content wrapper, NOT body, so fixed elements stay put */
+    #main-content.shake {
+      animation: screenShock 0.4s ease-in-out;
+    }
+    @keyframes screenShock {
+      0%, 100% { transform: translateX(0) translateY(0); }
+      20% { transform: translateX(-6px) translateY(4px); }
+      40% { transform: translateX(6px) translateY(-4px); }
+      60% { transform: translateX(-4px) translateY(-2px); }
+      80% { transform: translateX(4px) translateY(2px); }
+    }
+
+    /* ═══ CYBORG RAGE BLAST ═══ */
+    #canvas-container {
+      width: 50%;
+      height: 85vh;
+      position: relative;
+      z-index: 5;
+    }
+
+    /* ═══ CYBERTRUCK FUTURISTIC HUD OVERLAY ═══ */
+    #cyborg-hud {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 6;
+      overflow: hidden;
+    }
+    /* Angular corner brackets */
+    .hud-corner {
+      position: absolute;
+      width: 46px;
+      height: 46px;
+    }
+    .hud-corner::before, .hud-corner::after {
+      content: '';
+      position: absolute;
+      background: #00f7ff;
+      box-shadow: 0 0 8px #00f7ff, 0 0 18px rgba(0,247,255,0.4);
+    }
+    .hud-corner::before { width: 100%; height: 2px; top: 0; left: 0; }
+    .hud-corner::after  { width: 2px; height: 100%; top: 0; left: 0; }
+    .hud-corner-tl { top: 12px; left: 12px; }
+    .hud-corner-tr { top: 12px; right: 12px; transform: scaleX(-1); }
+    .hud-corner-bl { bottom: 12px; left: 12px; transform: scaleY(-1); }
+    .hud-corner-br { bottom: 12px; right: 12px; transform: scale(-1); }
+    /* Top sector label */
+    .hud-sector-label {
+      position: absolute;
+      top: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'Courier New', monospace;
+      font-size: 9px;
+      font-weight: 900;
+      letter-spacing: 4px;
+      color: #00f7ff;
+      text-shadow: 0 0 10px #00f7ff;
+      padding: 4px 18px;
+      background: rgba(0, 247, 255, 0.06);
+      border: 1px solid rgba(0, 247, 255, 0.3);
+      clip-path: polygon(10px 0%, calc(100% - 10px) 0%, 100% 100%, 0% 100%);
+      white-space: nowrap;
+      animation: sectorBlink 4s ease-in-out infinite;
+    }
+    @keyframes sectorBlink {
+      0%,80%,100% { opacity: 1; }
+      85%,96%     { opacity: 0.25; }
+    }
+    /* Left data panel */
+    .hud-panel-left {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+    .hud-data-row {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      font-family: 'Courier New', monospace;
+    }
+    .hud-label {
+      font-size: 7px;
+      letter-spacing: 2px;
+      color: rgba(255,0,127,0.8);
+      text-shadow: 0 0 6px rgba(255,0,127,0.5);
+    }
+    .hud-value {
+      font-size: 12px;
+      font-weight: 900;
+      color: #00f7ff;
+      text-shadow: 0 0 8px #00f7ff;
+      letter-spacing: 1px;
+      animation: valueFlicker 6s ease-in-out infinite;
+    }
+    @keyframes valueFlicker {
+      0%,90%,100% { opacity: 1; }
+      92%,95%     { opacity: 0.3; }
+    }
+    .hud-bar {
+      width: 54px;
+      height: 3px;
+      background: rgba(0,247,255,0.1);
+      border: 1px solid rgba(0,247,255,0.2);
+      overflow: hidden;
+    }
+    .hud-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #ff007f, #00f7ff);
+      box-shadow: 0 0 6px #00f7ff;
+    }
+    /* Right gauge panel */
+    .hud-panel-right {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 8px;
+    }
+    .hud-gauge {
+      position: relative;
+      width: 52px;
+      height: 52px;
+    }
+    .hud-gauge svg {
+      width: 100%;
+      height: 100%;
+      transform: rotate(-135deg);
+    }
+    .hud-gauge-track {
+      fill: none;
+      stroke: rgba(0,247,255,0.10);
+      stroke-width: 3;
+      stroke-dasharray: 188 188;
+    }
+    .hud-gauge-fill {
+      fill: none;
+      stroke-width: 3;
+      stroke-linecap: round;
+    }
+    .hud-gauge-fill.cyan {
+      stroke: #00f7ff;
+      filter: drop-shadow(0 0 4px #00f7ff);
+      stroke-dasharray: 60 188;
+      animation: gaugeCyan 2.5s ease-in-out infinite alternate;
+    }
+    .hud-gauge-fill.pink {
+      stroke: #ff007f;
+      filter: drop-shadow(0 0 4px #ff007f);
+      stroke-dasharray: 110 188;
+      animation: gaugePink 3.2s ease-in-out infinite alternate;
+    }
+    .hud-gauge-fill.orange {
+      stroke: #ff8c00;
+      filter: drop-shadow(0 0 4px #ff8c00);
+      stroke-dasharray: 80 188;
+      animation: gaugeOrange 2s ease-in-out infinite alternate;
+    }
+    @keyframes gaugeCyan   { 0% { stroke-dasharray: 60 188; }  100% { stroke-dasharray: 155 188; } }
+    @keyframes gaugePink   { 0% { stroke-dasharray: 100 188; } 100% { stroke-dasharray: 170 188; } }
+    @keyframes gaugeOrange { 0% { stroke-dasharray: 40 188; }  100% { stroke-dasharray: 130 188; } }
+    .hud-gauge-label {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Courier New', monospace;
+      font-size: 7px;
+      letter-spacing: 0.5px;
+      color: rgba(0,247,255,0.65);
+      transform: rotate(135deg);
+    }
+    /* Bottom scan line */
+    .hud-scan-line {
+      position: absolute;
+      bottom: 16px;
+      left: 12px;
+      right: 12px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(0,247,255,0.3), #00f7ff 50%, rgba(0,247,255,0.3), transparent);
+      box-shadow: 0 0 8px rgba(0,247,255,0.4);
+    }
+    .hud-scan-cursor {
+      position: absolute;
+      bottom: 8px;
+      width: 2px;
+      height: 18px;
+      background: #00f7ff;
+      box-shadow: 0 0 12px #00f7ff;
+      left: 12px;
+      animation: scanMove 3.5s linear infinite;
+    }
+    @keyframes scanMove {
+      0%   { left: 12px; }
+      50%  { left: calc(100% - 12px); }
+      100% { left: 12px; }
+    }
+    /* Angular step indicators */
+    .hud-steps {
+      position: absolute;
+      bottom: 36px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 5px;
+    }
+    .hud-step {
+      width: 16px;
+      height: 3px;
+      background: rgba(0,247,255,0.15);
+      border: 1px solid rgba(0,247,255,0.25);
+      clip-path: polygon(3px 0%, 100% 0%, calc(100% - 3px) 100%, 0% 100%);
+      animation: stepPulse 4s ease-in-out infinite;
+    }
+    .hud-step:nth-child(1) { animation-delay: 0s; }
+    .hud-step:nth-child(2) { animation-delay: 0.5s; }
+    .hud-step:nth-child(3) { animation-delay: 1.0s; }
+    .hud-step:nth-child(4) { animation-delay: 1.5s; }
+    .hud-step:nth-child(5) { animation-delay: 2.0s; }
+    @keyframes stepPulse {
+      0%,55%,100% { background: rgba(0,247,255,0.12); }
+      30%          { background: rgba(0,247,255,0.75); box-shadow: 0 0 8px #00f7ff; }
+    }
+    /* Diagonal dividers */
+    .hud-diag {
+      position: absolute;
+      height: 1px;
+      left: 8%;
+      width: 84%;
+      background: linear-gradient(90deg, transparent, rgba(255,0,127,0.22), rgba(0,247,255,0.22), transparent);
+      animation: diagPulse 5s ease-in-out infinite;
+    }
+    .hud-diag-1 { top: 26%; animation-delay: 0s; }
+    .hud-diag-2 { top: 74%; animation-delay: 2s; }
+    @keyframes diagPulse {
+      0%,100% { opacity: 0.25; }
+      50%     { opacity: 0.8; }
+    }
+    /* Vertical data streams */
+    .hud-stream {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 14px;
+      overflow: hidden;
+      opacity: 0.15;
+      font-family: 'Courier New', monospace;
+      font-size: 7px;
+      color: #00f7ff;
+      line-height: 13px;
+      pointer-events: none;
+    }
+    .hud-stream-inner {
+      white-space: pre;
+      animation: streamScroll linear infinite;
+    }
+    .hud-stream-l { left: 6%; animation-duration: 5.5s; }
+    .hud-stream-r { right: 6%; animation-duration: 7s; animation-delay: -3s; }
+    @keyframes streamScroll {
+      0%   { transform: translateY(-50%); }
+      100% { transform: translateY(0%); }
+    }
+    /* Targeting reticle */
+    .hud-reticle {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 64px;
+      height: 64px;
+      transform: translate(-50%, -50%);
+      animation: reticlePulse 3s ease-in-out infinite, reticleRotate 14s linear infinite;
+    }
+    @keyframes reticlePulse { 0%,100% { opacity: 0.2; } 50% { opacity: 0.45; } }
+    @keyframes reticleRotate {
+      from { transform: translate(-50%,-50%) rotate(0deg); }
+      to   { transform: translate(-50%,-50%) rotate(360deg); }
+    }
+
+    /* ═══ EXTRA CYBER WORLD HUD FEATURES ═══ */
+
+    /* Canvas layer — fills the whole HUD behind all elements */
+    #hud-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* ── RADAR sweep panel (bottom-left) ── */
+    .hud-radar {
+      position: absolute;
+      bottom: 56px;
+      left: 14px;
+      width: 80px;
+      height: 80px;
+      z-index: 2;
+    }
+    .hud-radar-canvas {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 1px solid rgba(0,247,255,0.3);
+      box-shadow: 0 0 12px rgba(0,247,255,0.2), inset 0 0 20px rgba(0,0,0,0.8);
+    }
+    .hud-radar-label {
+      position: absolute;
+      bottom: -14px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'Courier New', monospace;
+      font-size: 7px;
+      letter-spacing: 2px;
+      color: rgba(0,247,255,0.55);
+      white-space: nowrap;
+    }
+
+    /* ── Biometric waveform panel (bottom-right) ── */
+    .hud-wave {
+      position: absolute;
+      bottom: 56px;
+      right: 14px;
+      width: 90px;
+      height: 36px;
+      z-index: 2;
+      border-bottom: 1px solid rgba(255,0,127,0.3);
+    }
+    .hud-wave-canvas {
+      width: 100%;
+      height: 100%;
+    }
+    .hud-wave-label {
+      position: absolute;
+      bottom: -13px;
+      left: 0;
+      font-family: 'Courier New', monospace;
+      font-size: 7px;
+      letter-spacing: 2px;
+      color: rgba(255,0,127,0.55);
+      white-space: nowrap;
+    }
+
+    /* ── System log terminal (top-left, small) ── */
+    .hud-log {
+      position: absolute;
+      top: 68px;
+      left: 14px;
+      width: 120px;
+      z-index: 2;
+      font-family: 'Courier New', monospace;
+      font-size: 7px;
+      line-height: 11px;
+      letter-spacing: 0.5px;
+      overflow: hidden;
+      max-height: 66px;
+    }
+    .hud-log-line {
+      display: block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      animation: logFadeIn 0.3s ease forwards;
+    }
+    .hud-log-line.ok   { color: rgba(0,247,255,0.65); }
+    .hud-log-line.warn { color: rgba(255,140,0,0.75); }
+    .hud-log-line.err  { color: rgba(255,0,80,0.75); }
+    @keyframes logFadeIn {
+      from { opacity: 0; transform: translateX(-6px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+
+    /* ── Network packets flying (horizontal bar group) ── */
+    .hud-packets {
+      position: absolute;
+      top: 68px;
+      right: 14px;
+      width: 66px;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .hud-pkt-row {
+      height: 2px;
+      background: rgba(0,247,255,0.08);
+      position: relative;
+      overflow: hidden;
+      border-radius: 1px;
+    }
+    .hud-pkt-dot {
+      position: absolute;
+      top: 0;
+      height: 100%;
+      width: 18px;
+      border-radius: 1px;
+      animation: pktFly linear infinite;
+    }
+    .hud-pkt-dot.c { background: linear-gradient(90deg, transparent, #00f7ff, transparent); animation-duration: 1.8s; }
+    .hud-pkt-dot.p { background: linear-gradient(90deg, transparent, #ff007f, transparent); animation-duration: 2.4s; }
+    .hud-pkt-dot.o { background: linear-gradient(90deg, transparent, #ff8c00, transparent); animation-duration: 1.4s; }
+    .hud-pkt-dot.v { background: linear-gradient(90deg, transparent, #a855f7, transparent); animation-duration: 3.1s; }
+    @keyframes pktFly {
+      from { left: -20px; }
+      to   { left: 100%; }
+    }
+    .hud-pkt-row:nth-child(1) .hud-pkt-dot { animation-delay: 0s; }
+    .hud-pkt-row:nth-child(2) .hud-pkt-dot { animation-delay: -0.6s; }
+    .hud-pkt-row:nth-child(3) .hud-pkt-dot { animation-delay: -1.1s; }
+    .hud-pkt-row:nth-child(4) .hud-pkt-dot { animation-delay: -0.3s; }
+    .hud-pkt-row:nth-child(5) .hud-pkt-dot { animation-delay: -1.7s; }
+    .hud-pkt-row:nth-child(6) .hud-pkt-dot { animation-delay: -0.9s; }
+    .hud-packets-label {
+      font-family: 'Courier New', monospace;
+      font-size: 7px;
+      letter-spacing: 1.5px;
+      color: rgba(0,247,255,0.4);
+      margin-bottom: 4px;
+    }
+
+    /* ── SYSTEM STATUS badge (center-bottom) ── */
+    .hud-status-badge {
+      position: absolute;
+      bottom: 56px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'Courier New', monospace;
+      font-size: 8px;
+      font-weight: 900;
+      letter-spacing: 3px;
+      padding: 4px 14px;
+      clip-path: polygon(8px 0%, calc(100% - 8px) 0%, 100% 100%, 0% 100%);
+      white-space: nowrap;
+      z-index: 2;
+      animation: statusCycle 8s steps(1) infinite;
+    }
+    @keyframes statusCycle {
+      0%  { background: rgba(0,247,255,0.12); color: #00f7ff;
+            text-shadow: 0 0 8px #00f7ff;
+            border: 1px solid rgba(0,247,255,0.35);
+            content: 'SYS: ONLINE'; }
+      38% { background: rgba(255,140,0,0.12); color: #ff8c00;
+            text-shadow: 0 0 8px #ff8c00;
+            border: 1px solid rgba(255,140,0,0.35); }
+      62% { background: rgba(0,247,255,0.12); color: #00f7ff;
+            text-shadow: 0 0 8px #00f7ff;
+            border: 1px solid rgba(0,247,255,0.35); }
+    }
+
+    /* ── Neural node pulse ring ── */
+    .hud-neural-ring {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 120px;
+      height: 120px;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      border: 1px solid rgba(0,247,255,0.08);
+      z-index: 1;
+      animation: neuralExpand 3s ease-out infinite;
+      pointer-events: none;
+    }
+    .hud-neural-ring:nth-child(2) { animation-delay: 1s; }
+    .hud-neural-ring:nth-child(3) { animation-delay: 2s; }
+    @keyframes neuralExpand {
+      0%   { transform: translate(-50%,-50%) scale(0.5); opacity: 0.5; }
+      100% { transform: translate(-50%,-50%) scale(2.2); opacity: 0; }
+    }
+
+    /* ── Hex grid overlay (fine mesh like carbon fiber) ── */
+    .hud-hexgrid {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0;
+      animation: hexFade 6s ease-in-out infinite;
+    }
+    @keyframes hexFade { 0%,100%{opacity:0;} 50%{opacity:0.04;} }
+
+    /* ── Glitch slice overlay ── */
+    .hud-glitch-slice {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: rgba(0,247,255,0.55);
+      mix-blend-mode: screen;
+      pointer-events: none;
+      z-index: 3;
+      opacity: 0;
+      animation: glitchSlice 7s steps(1) infinite;
+    }
+    .hud-glitch-slice:nth-child(2) { animation-delay: 2.3s; background: rgba(255,0,127,0.55); }
+    .hud-glitch-slice:nth-child(3) { animation-delay: 4.7s; background: rgba(255,140,0,0.55); }
+    @keyframes glitchSlice {
+      0%,88%,100% { opacity: 0; top: 0; }
+      89%  { opacity: 1; top: 20%; height: 2px; }
+      90%  { top: 65%; height: 4px; }
+      91%  { top: 38%; height: 1px; }
+      92%  { opacity: 0; }
+    }
+
+    /* ── IP / coordinates display (very small, corners) ── */
+    .hud-coord {
+      position: absolute;
+      font-family: 'Courier New', monospace;
+      font-size: 7px;
+      letter-spacing: 1px;
+      color: rgba(0,247,255,0.28);
+      z-index: 2;
+      pointer-events: none;
+      animation: coordBlink 5s steps(1) infinite;
+    }
+    .hud-coord-bl { bottom: 130px; left: 14px; }
+    .hud-coord-br { bottom: 130px; right: 14px; text-align: right; }
+    @keyframes coordBlink { 0%,94%,100%{opacity:1;} 95%,97%{opacity:0;} }
+
+    #main-content.rage-blur {
+      filter: blur(12px) saturate(3) hue-rotate(-30deg) brightness(0.6);
+      transition: filter 0s;           /* instant on */
+    }
+    #main-content.rage-blur-recover {
+      filter: blur(0px) saturate(1) hue-rotate(0deg) brightness(1);
+      transition: filter 1.8s ease-out; /* smooth off */
+    }
+    /* ─── HANG SCREEN: static noise after blast ─── */
+    #rage-hang {
+      position: fixed;
+      inset: 0;
+      z-index: 999998;
+      pointer-events: all;          /* block all interaction */
+      opacity: 0;
+      display: none;
+    }
+    #rage-hang canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+    /* "SYSTEM OVERLOAD" text */
+    #rage-hang-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: 'Courier New', monospace;
+      font-size: clamp(16px, 2.5vw, 28px);
+      font-weight: 900;
+      letter-spacing: 6px;
+      text-transform: uppercase;
+      color: #ff0000;
+      text-shadow: 0 0 20px #ff0000, 0 0 40px rgba(255,0,0,0.6);
+      white-space: nowrap;
+      animation: hangTextFlicker 0.12s steps(1) infinite;
+    }
+    @keyframes hangTextFlicker {
+      0%,100% { opacity: 1; }
+      50%      { opacity: 0.2; }
+    }
+    #rage-hang-sub {
+      position: absolute;
+      top: calc(50% + 44px);
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'Courier New', monospace;
+      font-size: clamp(10px, 1.2vw, 14px);
+      letter-spacing: 4px;
+      color: rgba(255, 80, 80, 0.7);
+      white-space: nowrap;
+      animation: hangTextFlicker 0.4s steps(1) infinite 0.06s;
+    }
+    #rage-bar-wrap {
+      position: absolute;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 280px;
+      height: 6px;
+      background: rgba(255,0,0,0.15);
+      border: 1px solid rgba(255,0,0,0.3);
+    }
+    #rage-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #ff0000, #ff6600);
+      box-shadow: 0 0 12px #ff0000;
+      transition: width 0.1s linear;
+    }
+      width: 50%;
+      height: 85vh;
+      position: relative;
+      z-index: 5;
+    }
+    #rage-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 999999;
+      pointer-events: none;
+      opacity: 0;
+    }
+    /* Anger warning — red vignette creeping in at edges */
+    #rage-vignette {
+      position: fixed;
+      inset: 0;
+      z-index: 99990;
+      pointer-events: none;
+      opacity: 0;
+      background: radial-gradient(ellipse at center,
+        transparent 30%,
+        rgba(255, 0, 0, 0.15) 60%,
+        rgba(255, 0, 0, 0.55) 85%,
+        rgba(200, 0, 0, 0.85) 100%
+      );
+      transition: opacity 0.4s ease;
+    }
+    /* Anger counter badge */
+    #rage-meter {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%) scale(0);
+      z-index: 99991;
+      pointer-events: none;
+      font-family: 'Courier New', monospace;
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 3px;
+      color: #ff0000;
+      text-shadow: 0 0 10px #ff0000, 0 0 20px rgba(255,0,0,0.6);
+      background: rgba(0, 0, 0, 0.8);
+      border: 1px solid rgba(255, 0, 0, 0.4);
+      padding: 6px 18px;
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    #rage-meter.visible { transform: translateX(-50%) scale(1); }
+    /* Blast flash overlay */
+    @keyframes blastFlash {
+      0%   { opacity: 0; }
+      8%   { opacity: 1; }
+      18%  { opacity: 0.92; }
+      30%  { opacity: 0.75; }
+      50%  { opacity: 0.55; }
+      70%  { opacity: 0.30; }
+      85%  { opacity: 0.10; }
+      100% { opacity: 0; }
+    }
+    @keyframes blastFlashShake {
+      0%,100% { transform: translate(0, 0) scale(1); }
+      10%  { transform: translate(-14px, 8px) scale(1.02); }
+      20%  { transform: translate(12px, -10px) scale(1.02); }
+      30%  { transform: translate(-8px, 6px) scale(1.01); }
+      40%  { transform: translate(10px, -4px) scale(1.01); }
+      50%  { transform: translate(-6px, 8px) scale(1.005); }
+      60%  { transform: translate(6px, -6px) scale(1.005); }
+      75%  { transform: translate(-3px, 3px) scale(1); }
+    }
+    #rage-overlay.blasting {
+      animation: blastFlash 2.4s ease-out forwards;
+    }
+    #rage-overlay.blasting canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+    /* Anger glitch lines on cyborg */
+    @keyframes angerGlitch {
+      0%,100% { clip-path: none; transform: none; }
+      20% { clip-path: polygon(0 15%, 100% 15%, 100% 20%, 0 20%); transform: translateX(-8px); }
+      40% { clip-path: polygon(0 55%, 100% 55%, 100% 62%, 0 62%); transform: translateX(10px); }
+      60% { clip-path: polygon(0 80%, 100% 80%, 100% 85%, 0 85%); transform: translateX(-5px); }
+    }
+    #canvas-container.angry { animation: angerGlitch 0.12s steps(1) infinite; }
+    /* Red eye flicker when angry */
+    @keyframes angerEyeFlicker {
+      0%,100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    .ambient-glow{
+      position:absolute;
+      width:600px;
+      height:600px;
+      background:radial-gradient(circle, rgba(255,0,127,0.06) 0%, transparent 70%);
+      top:50%; right:10%;
+      transform: translateY(-50%);
+      z-index:1;
+      pointer-events: none;
+    }
+
+    /* --- Structural Styles for Added Sections --- */
+    section.content-section {
+      padding: 90px 10% 160px;
+      position: relative;
+      z-index: 10;
+      background: #02040a;
+      overflow: hidden;
+      background-image:
+        linear-gradient(rgba(0, 247, 255, 0.01) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 247, 255, 0.01) 1px, transparent 1px);
+      background-size: 30px 30px;
+      background-position: center;
+    }
+
+    /* Cyberpunk text glow for section headings */
+    section.content-section h2 {
+      position: relative;
+      letter-spacing: 2px;
+      color: #ffffff;
+      background: linear-gradient(to right, #00f7ff 0%, #ff007f 50%, #00f7ff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 20px rgba(0, 247, 255, 0.3);
+      animation: titleGlow 4s ease-in-out infinite;
+    }
+
+    @keyframes titleGlow {
+      0%, 100% { filter: drop-shadow(0 0 8px rgba(0, 247, 255, 0.3)); }
+      50% { filter: drop-shadow(0 0 20px rgba(0, 247, 255, 0.8)) drop-shadow(0 0 30px rgba(255, 0, 127, 0.4)); }
+    }
+
+    /* Cyberpunk text glow */
+    section.content-section p {
+      text-shadow: 0 0 10px rgba(0, 247, 255, 0.15);
+      letter-spacing: 0.3px;
+      line-height: 1.8;
+    }
+
+    /* Neon emphasis on strong text */
+    section.content-section strong {
+      color: #ff007f;
+      text-shadow: 0 0 12px rgba(255, 0, 127, 0.6);
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    /* Cyber box styling for content boxes */
+    section.content-section > div {
+      border-left: 3px solid rgba(0, 247, 255, 0.2);
+      border-right: 3px solid rgba(255, 0, 127, 0.2);
+      padding-left: 16px;
+      padding-right: 16px;
+      position: relative;
+    }
+
+    section.content-section > div::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -3px;
+      width: 3px;
+      height: 100%;
+      background: linear-gradient(180deg, rgba(0, 247, 255, 0.6), rgba(255, 0, 127, 0.6));
+      box-shadow: -2px 0 12px rgba(0, 247, 255, 0.4);
+      opacity: 0;
+      animation: borderPulse 3s ease-in-out infinite;
+    }
+
+    @keyframes borderPulse {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 1; box-shadow: -2px 0 20px rgba(0, 247, 255, 0.8); }
+    }
+
+    /* ══════════════════════════════════════════════════
+       CYBERTRUCK ROAD SYSTEM
+    ══════════════════════════════════════════════════ */
+    .ct-road-wrap {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 110px;
+      z-index: 30;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    /* Road surface */
+    .ct-road {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 70px;
+      background: linear-gradient(180deg, #0a0f1a 0%, #111827 60%, #0d1117 100%);
+      border-top: 1px solid rgba(0,247,255,0.18);
+    }
+    .ct-road::before {  /* road texture lines */
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        90deg,
+        transparent 0px,
+        transparent 38px,
+        rgba(255,255,255,0.04) 38px,
+        rgba(255,255,255,0.04) 40px
+      );
+    }
+
+    /* Dashed centre line */
+    .ct-lane-line {
+      position: absolute;
+      bottom: 34px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: repeating-linear-gradient(
+        90deg,
+        rgba(255,220,0,0.35) 0px,
+        rgba(255,220,0,0.35) 28px,
+        transparent 28px,
+        transparent 56px
+      );
+      animation: laneScroll 1.6s linear infinite;
+    }
+    @keyframes laneScroll {
+      from { background-position: 0 0; }
+      to   { background-position: -56px 0; }
+    }
+
+    /* Road edge glow */
+    .ct-road-edge {
+      position: absolute;
+      bottom: 70px;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg,
+        transparent 0%,
+        rgba(0,247,255,0.6) 15%,
+        rgba(138,43,226,0.5) 40%,
+        rgba(0,247,255,0.6) 65%,
+        transparent 100%
+      );
+      box-shadow: 0 0 14px rgba(0,247,255,0.5), 0 0 28px rgba(138,43,226,0.3);
+      animation: edgeGlow 3s ease-in-out infinite;
+    }
+    @keyframes edgeGlow {
+      0%,100% { opacity: 0.7; }
+      50%     { opacity: 1; }
+    }
+
+    /* ── CYBERTRUCK SVG vehicle ── */
+    .ct-truck {
+      position: absolute;
+      bottom: 70px;   /* sits ON the road surface */
+      width: 220px;
+      height: 70px;
+      animation: truckDrive linear infinite;
+    }
+    .ct-truck.forward  { animation-direction: normal; }
+    .ct-truck.backward { transform: scaleX(-1); animation-direction: normal; }
+
+    @keyframes truckDrive {
+      from { left: -240px; }
+      to   { left: calc(100% + 20px); }
+    }
+
+    /* Truck glow aura */
+    .ct-truck::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 10%;
+      width: 80%;
+      height: 8px;
+      background: radial-gradient(ellipse at center,
+        rgba(0,247,255,0.5) 0%,
+        rgba(138,43,226,0.3) 50%,
+        transparent 100%
+      );
+      filter: blur(6px);
+      animation: truckGlow 0.5s ease-in-out infinite alternate;
+    }
+    @keyframes truckGlow {
+      from { opacity: 0.6; }
+      to   { opacity: 1; }
+    }
+
+    /* Cargo label on truck */
+    .ct-truck-cargo {
+      position: absolute;
+      top: 6px;
+      left: 62px;
+      right: 14px;
+      bottom: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Courier New', monospace;
+      font-size: 8px;
+      font-weight: 900;
+      letter-spacing: 1.5px;
+      text-align: center;
+      color: #00f7ff;
+      text-shadow: 0 0 6px #00f7ff;
+      line-height: 1.3;
+      z-index: 2;
+      overflow: hidden;
+      pointer-events: none;
+      padding: 2px 4px;
+    }
+
+    /* Headlight beam */
+    .ct-headlight {
+      position: absolute;
+      right: -60px;
+      top: 18px;
+      width: 65px;
+      height: 22px;
+      background: linear-gradient(90deg,
+        rgba(200,240,255,0.7) 0%,
+        rgba(180,220,255,0.25) 50%,
+        transparent 100%
+      );
+      clip-path: polygon(0% 40%, 100% 0%, 100% 100%, 0% 60%);
+      filter: blur(2px);
+      pointer-events: none;
+    }
+    .ct-truck.backward .ct-headlight {
+      right: auto;
+      left: -60px;
+      transform: scaleX(-1);
+    }
+
+    /* Tail-light */
+    .ct-taillight {
+      position: absolute;
+      left: -8px;
+      top: 20px;
+      width: 8px;
+      height: 14px;
+      background: rgba(255, 30, 0, 0.85);
+      box-shadow: 0 0 10px rgba(255,0,0,0.8), -4px 0 14px rgba(255,0,0,0.5);
+      border-radius: 1px;
+    }
+    .ct-truck.backward .ct-taillight {
+      left: auto;
+      right: -8px;
+    }
+
+    /* Wheel spin */
+    .ct-wheel {
+      position: absolute;
+      bottom: 0px;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #1a2030 30%, #0d1117 60%, #1a2030 100%);
+      border: 2px solid rgba(0,247,255,0.45);
+      box-shadow: 0 0 8px rgba(0,247,255,0.3);
+      animation: wheelSpin linear infinite;
+    }
+    @keyframes wheelSpin {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+    .ct-wheel::before {   /* hub spokes */
+      content: '';
+      position: absolute;
+      inset: 4px;
+      background:
+        linear-gradient(0deg, rgba(0,247,255,0.4) 0px, rgba(0,247,255,0.4) 2px, transparent 2px),
+        linear-gradient(90deg, rgba(0,247,255,0.4) 0px, rgba(0,247,255,0.4) 2px, transparent 2px),
+        linear-gradient(45deg, rgba(0,247,255,0.2) 0px, rgba(0,247,255,0.2) 1px, transparent 1px),
+        linear-gradient(-45deg, rgba(0,247,255,0.2) 0px, rgba(0,247,255,0.2) 1px, transparent 1px);
+      border-radius: 50%;
+    }
+    .ct-wheel-f { left: 160px; }
+    .ct-wheel-r { left: 30px; }
+
+    /* Speed lines (motion blur streaks) */
+    .ct-speed-line {
+      position: absolute;
+      height: 1px;
+      border-radius: 1px;
+      opacity: 0;
+      animation: speedLine linear infinite;
+      pointer-events: none;
+    }
+    @keyframes speedLine {
+      0%   { opacity: 0; left: 100%; }
+      10%  { opacity: 0.6; }
+      90%  { opacity: 0.4; }
+      100% { opacity: 0; left: -30%; }
+    }
+
+    /* Road distance markers (vertical tick marks) */
+    .ct-road-tick {
+      position: absolute;
+      bottom: 0;
+      width: 1px;
+      height: 12px;
+      background: rgba(0,247,255,0.15);
+      animation: tickScroll linear infinite;
+    }
+    @keyframes tickScroll {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-100vw); }
+    }
+
+    /* ═══ FUTURISTIC SLIDING DOOR REVEAL (Heavy Industrial Cyberpunk Design) ═══ */
+    section.content-section::before,
+    section.content-section::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      width: 50%;
+      height: 100%;
+      background: 
+        linear-gradient(135deg, #1a2332 0%, #0f1621 50%, #1a2332 100%),
+        repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.2) 2px, rgba(0,0,0,0.2) 4px);
+      z-index: 100;
+      transition: transform 0.95s cubic-bezier(0.77, 0, 0.175, 1);
+      pointer-events: none;
+      box-shadow: 
+        inset 0 0 80px rgba(0, 0, 0, 0.8),
+        inset 0 0 40px rgba(100, 120, 150, 0.15),
+        0 0 60px rgba(0, 0, 0, 0.9);
+    }
+    section.content-section::before {
+      left: 0;
+      transform: translateX(0);
+      border-right: 3px solid #0a0f1a;
+      box-shadow: 
+        inset -8px 0 30px rgba(0, 247, 255, 0.12),
+        inset 0 0 80px rgba(0, 0, 0, 0.8),
+        0 0 60px rgba(0, 0, 0, 0.9);
+    }
+    section.content-section::after {
+      right: 0;
+      transform: translateX(0);
+      border-left: 3px solid #0a0f1a;
+      box-shadow: 
+        inset 8px 0 30px rgba(255, 0, 127, 0.12),
+        inset 0 0 80px rgba(0, 0, 0, 0.8),
+        0 0 60px rgba(0, 0, 0, 0.9);
+    }
+
+    /* Door panels slide away when section is revealed */
+    section.content-section.door-open::before {
+      transform: translateX(-100%);
+    }
+    section.content-section.door-open::after {
+      transform: translateX(100%);
+    }
+
+    /* Center hinge light streak (Purple/Cyan gradient like reference) */
+    section.content-section .door-hinge {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 4px;
+      height: 100%;
+      background: linear-gradient(to bottom,
+        rgba(0, 247, 255, 0.3) 0%,
+        rgba(138, 43, 226, 0.8) 15%,
+        rgba(0, 247, 255, 0.9) 35%,
+        rgba(255, 105, 180, 0.9) 50%,
+        rgba(0, 247, 255, 0.9) 65%,
+        rgba(138, 43, 226, 0.8) 85%,
+        rgba(0, 247, 255, 0.3) 100%
+      );
+      box-shadow: 
+        0 0 20px rgba(0, 247, 255, 0.8),
+        0 0 40px rgba(138, 43, 226, 0.6),
+        0 0 60px rgba(255, 105, 180, 0.4);
+      z-index: 101;
+      opacity: 1;
+      transition: opacity 0.6s ease 0.3s;
+      pointer-events: none;
+    }
+    section.content-section.door-open .door-hinge {
+      opacity: 0;
+    }
+
+    /* Horizontal neon strips (Purple, Cyan, Orange, Pink like reference image) */
+    section.content-section .door-light {
+      position: absolute;
+      height: 3px;
+      z-index: 101;
+      opacity: 1;
+      transition: opacity 0.5s ease 0.4s, transform 0.95s cubic-bezier(0.77, 0, 0.175, 1);
+      pointer-events: none;
+      border-radius: 2px;
+    }
+    section.content-section.door-open .door-light {
+      opacity: 0;
+    }
+
+    /* Left door neon strips */
+    section.content-section .door-light-left-1 {
+      top: 12%;
+      left: 0;
+      width: 48%;
+      background: linear-gradient(90deg, rgba(138, 43, 226, 0.9), rgba(138, 43, 226, 0.3));
+      box-shadow: 0 0 15px rgba(138, 43, 226, 0.8), 0 0 30px rgba(138, 43, 226, 0.5);
+      transform: translateX(0);
+    }
+    section.content-section.door-open .door-light-left-1 { transform: translateX(-100%); }
+
+    section.content-section .door-light-left-2 {
+      top: 28%;
+      left: 0;
+      width: 45%;
+      background: linear-gradient(90deg, rgba(0, 247, 255, 0.9), rgba(0, 247, 255, 0.2));
+      box-shadow: 0 0 15px rgba(0, 247, 255, 0.8), 0 0 30px rgba(0, 247, 255, 0.5);
+      transform: translateX(0);
+    }
+    section.content-section.door-open .door-light-left-2 { transform: translateX(-100%); }
+
+    section.content-section .door-light-left-3 {
+      top: 52%;
+      left: 0;
+      width: 42%;
+      background: linear-gradient(90deg, rgba(255, 140, 0, 0.9), rgba(255, 140, 0, 0.2));
+      box-shadow: 0 0 15px rgba(255, 140, 0, 0.8), 0 0 30px rgba(255, 140, 0, 0.5);
+      transform: translateX(0);
+    }
+    section.content-section.door-open .door-light-left-3 { transform: translateX(-100%); }
+
+    section.content-section .door-light-left-4 {
+      top: 72%;
+      left: 0;
+      width: 46%;
+      background: linear-gradient(90deg, rgba(255, 105, 180, 0.9), rgba(255, 105, 180, 0.2));
+      box-shadow: 0 0 15px rgba(255, 105, 180, 0.8), 0 0 30px rgba(255, 105, 180, 0.5);
+      transform: translateX(0);
+    }
+    section.content-section.door-open .door-light-left-4 { transform: translateX(-100%); }
+
+    /* Right door neon strips */
+    section.content-section .door-light-right-1 {
+      top: 12%;
+      right: 0;
+      width: 48%;
+      background: linear-gradient(90deg, rgba(138, 43, 226, 0.3), rgba(138, 43, 226, 0.9));
+      box-shadow: 0 0 15px rgba(138, 43, 226, 0.8), 0 0 30px rgba(138, 43, 226, 0.5);
+      transform: translateX(0);
+    }
+    section.content-section.door-open .door-light-right-1 { transform: translateX(100%); }
+
+    section.content-section .door-light-right-2 {
+      top: 28%;
+      right: 0;
+      width: 45%;
+      background: linear-gradient(90deg, rgba(0, 247, 255, 0.2), rgba(0, 247, 255, 0.9));
+      box-shadow: 0 0 15px rgba(0, 247, 255, 0.8), 0 0 30px rgba(0, 247, 255, 0.5);
+      transform: translateX(0);
+    }
+    section.content-section.door-open .door-light-right-2 { transform: translateX(100%); }
+
+    section.content-section .door-light-right-3 {
+      top: 52%;
+      right: 0;
+      width: 42%;
+      background: linear-gradient(90deg, rgba(255, 140, 0, 0.2), rgba(255, 140, 0, 0.9));
+      box-shadow: 0 0 15px rgba(255, 140, 0, 0.8), 0 0 30px rgba(255, 140, 0, 0.5);
+      transform: translateX(0);
+    }
+    section.content-section.door-open .door-light-right-3 { transform: translateX(100%); }
+
+    section.content-section .door-light-right-4 {
+      top: 72%;
+      right: 0;
+      width: 46%;
+      background: linear-gradient(90deg, rgba(255, 105, 180, 0.2), rgba(255, 105, 180, 0.9));
+      box-shadow: 0 0 15px rgba(255, 105, 180, 0.8), 0 0 30px rgba(255, 105, 180, 0.5);
+      transform: translateX(0);
+    }
+    section.content-section.door-open .door-light-right-4 { transform: translateX(100%); }
+
+    /* Ensure content is visible above doors */
+    section.content-section > * {
+      position: relative;
+      z-index: 50;
+    }
+
+    .section-title {
+      font-size: 36px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 50px;
+      color: #fff;
+      border-left: 4px solid #ff007f;
+      padding-left: 15px;
+      cursor: none;
+      transition: text-shadow 0.2s ease;
+    }
+    .section-title:hover {
+      text-shadow: 0 0 20px rgba(255, 0, 127, 0.35);
+    }
+    .section-title span {
+      color: #ff007f;
+      text-shadow: 0 0 10px rgba(255,0,127,0.3);
+    }
+
+    /* Section 2: The Problem */
+    .problem-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+    }
+    .problem-card {
+      background: rgba(15, 23, 42, 0.4);
+      border: 1px solid rgba(148, 163, 184, 0.1);
+      padding: 40px;
+      border-radius: 4px;
+      transition: all 0.3s ease;
+      cursor: none;
+    }
+    .problem-card:hover {
+      border-color: rgba(255, 0, 255, 0.4);
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(255, 0, 255, 0.05);
+    }
+    .problem-card h3 {
+      font-size: 22px;
+      color: #ff00ff;
+      margin-bottom: 15px;
+      letter-spacing: 1px;
+    }
+    .problem-card p {
+      color: #94a3b8;
+      line-height: 1.6;
+    }
+
+    /* Section 3: Core Features Grid Matrix */
+    .matrix-table-container {
+      overflow-x: auto;
+      background: rgba(15, 23, 42, 0.3);
+      border: 1px solid rgba(255, 0, 127, 0.1);
+      border-radius: 4px;
+    }
+    .matrix-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      min-width: 700px;
+    }
+    .matrix-table th, .matrix-table td {
+      padding: 20px 25px;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.08);
+    }
+    .matrix-table th {
+      background: rgba(255, 0, 127, 0.05);
+      color: #ff007f;
+      text-transform: uppercase;
+      font-size: 14px;
+      letter-spacing: 1px;
+    }
+    .matrix-table tr:hover td {
+      background: rgba(255, 0, 127, 0.02);
+      color: #fff;
+    }
+    .feature-name {
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .spec-badge {
+      background: rgba(255, 0, 127, 0.1);
+      color: #ff007f;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      border: 1px solid rgba(255, 0, 127, 0.2);
+    }
+
+    /* Section 4: Timeline Integration Process */
+    .timeline {
+      position: relative;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .timeline::after {
+      content: '';
+      position: absolute;
+      width: 2px;
+      background: rgba(255, 0, 127, 0.1);
+      top: 0; bottom: 0; left: 50%;
+      margin-left: -1px;
+    }
+    .timeline-item {
+      padding: 10px 40px;
+      position: relative;
+      width: 50%;
+    }
+    .timeline-item.left { left: 0; text-align: right; }
+    .timeline-item.right { left: 50%; text-align: left; }
+    .timeline-item::after {
+      content: '';
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      right: -7px;
+      background-color: #02040a;
+      border: 2px solid #ff007f;
+      top: 25px;
+      border-radius: 50%;
+      z-index: 1;
+      box-shadow: 0 0 10px #ff007f;
+    }
+    .timeline-item.right::after { left: -5px; }
+    .phase-tag {
+      font-size: 14px;
+      color: #ff007f;
+      font-weight: 800;
+      letter-spacing: 2px;
+      margin-bottom: 5px;
+      display: block;
+    }
+    .timeline-content {
+      background: rgba(15, 23, 42, 0.4);
+      padding: 25px;
+      border-radius: 4px;
+      border: 1px solid rgba(148, 163, 184, 0.05);
+    }
+    .timeline-content h3 {
+      font-size: 20px;
+      margin-bottom: 10px;
+      color: #fff;
+    }
+    .timeline-content p {
+      color: #94a3b8;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    /* Section 5: Trust, Security & Compliance */
+    .security-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 30px;
+    }
+    .security-card {
+      background: linear-gradient(135deg, rgba(15,23,42,0.6) 0%, rgba(2,4,10,0.4) 100%);
+      border: 1px solid rgba(255, 0, 127, 0.08);
+      padding: 35px;
+      border-radius: 4px;
+      position: relative;
+    }
+    .security-card::before {
+      content: 'SECURE';
+      position: absolute;
+      top: 15px; right: 15px;
+      font-size: 10px;
+      color: rgba(255, 0, 127, 0.3);
+      letter-spacing: 1px;
+      border: 1px solid rgba(255, 0, 127, 0.2);
+      padding: 2px 6px;
+      border-radius: 2px;
+    }
+    .security-card h3 {
+      color: #fff;
+      font-size: 20px;
+      margin-bottom: 12px;
+    }
+    .security-card p {
+      color: #94a3b8;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    /* Section 6: Interactive Terminal FAQs Accordion */
+    .faq-container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .faq-item {
+      background: #090d16;
+      border: 1px solid rgba(148, 163, 184, 0.08);
+      margin-bottom: 15px;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .faq-trigger {
+      width: 100%;
+      padding: 22px 30px;
+      background: none;
+      border: none;
+      text-align: left;
+      color: #fff;
+      font-size: 17px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background 0.3s ease;
+    }
+    .faq-trigger:hover {
+      background: rgba(255, 0, 127, 0.02);
+    }
+    .faq-trigger::after {
+      content: '+';
+      color: #ff007f;
+      font-size: 22px;
+      transition: transform 0.3s ease;
+    }
+    .faq-item.active .faq-trigger::after {
+      transform: rotate(45deg);
+      color: #ff00ff;
+    }
+    .faq-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s cubic-bezier(0, 1, 0, 1);
+      background: rgba(2, 4, 10, 0.5);
+    }
+    .faq-content p {
+      padding: 0 30px 25px 30px;
+      color: #94a3b8;
+      line-height: 1.6;
+      font-size: 15px;
+    }
+    .faq-item.active .faq-content {
+      max-height: 1000px;
+      transition: max-height 0.3s cubic-bezier(1, 0, 1, 0);
+    }
+
+    /* Section 7: Final Closing CTA */
+    .closing-cta {
+      text-align: center;
+      padding: 140px 10% !important;
+      background: radial-gradient(circle at center, #0b1528 0%, #02040a 60%);
+      border-top: 1px solid rgba(255, 0, 127, 0.05);
+    }
+    .closing-cta h2 {
+      font-size: 42px;
+      font-weight: 800;
+      margin-bottom: 20px;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.3;
+    }
+    .closing-cta p {
+      color: #94a3b8;
+      font-size: 18px;
+      margin-bottom: 40px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 40px;
+      color: #475569;
+      font-size: 13px;
+      letter-spacing: 1px;
+      border-top: 1px solid rgba(148, 163, 184, 0.05);
+    }
+
+    /* ===================== SPACESHIP SYSTEM ===================== */
+    #spaceship-layer {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9990;
+      overflow: hidden;
+    }
+
+    .enemy-ship {
+      position: fixed;
+      width: 64px;
+      height: 30px;
+      pointer-events: all;
+      cursor: none;
+      filter: drop-shadow(0 0 6px rgba(0, 247, 255, 0.7)) drop-shadow(0 0 14px rgba(0, 247, 255, 0.4));
+      transition: filter 0.1s;
+      will-change: transform;
+    }
+    .enemy-ship.hit {
+      filter: drop-shadow(0 0 20px #fff) drop-shadow(0 0 40px #ff007f) !important;
+    }
+    .enemy-ship svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Ship engine glow pulse */
+    @keyframes engineGlow {
+      0%, 100% { opacity: 0.7; r: 3px; }
+      50% { opacity: 1; r: 5px; }
+    }
+    .engine-dot {
+      animation: engineGlow 0.6s ease-in-out infinite alternate;
+    }
+    .engine-dot-2 {
+      animation: engineGlow 0.6s ease-in-out 0.3s infinite alternate;
+    }
+
+    /* Ship explosion */
+    .ship-explosion {
+      position: fixed;
+      pointer-events: none;
+      z-index: 99995;
+      transform: translate(-50%, -50%);
+    }
+    .ship-explosion-ring {
+      position: absolute;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      border: 3px solid #ff007f;
+      animation: shipExpRing 0.5s ease-out forwards;
+    }
+    @keyframes shipExpRing {
+      0% { width: 10px; height: 10px; opacity: 1; border-color: #fff; }
+      100% { width: 120px; height: 120px; opacity: 0; border-color: #ff007f; }
+    }
+    .ship-explosion-core {
+      position: absolute;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(circle, #fff 0%, #ff007f 40%, #ff6600 70%, transparent 100%);
+      animation: shipExpCore 0.45s ease-out forwards;
+    }
+    @keyframes shipExpCore {
+      0% { width: 12px; height: 12px; opacity: 1; }
+      60% { width: 70px; height: 70px; opacity: 0.9; }
+      100% { width: 90px; height: 90px; opacity: 0; }
+    }
+    .ship-debris {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      border-radius: 1px;
+      transform: translate(-50%, -50%);
+      animation: debrisFly 0.65s ease-out forwards;
+    }
+    @keyframes debrisFly {
+      0% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+      100% { opacity: 0; transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(0.2) rotate(var(--dr)); }
+    }
+    .ship-score-pop {
+      position: fixed;
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      color: #00f7ff;
+      text-shadow: 0 0 10px #00f7ff, 0 0 20px #ff007f;
+      pointer-events: none;
+      z-index: 99996;
+      transform: translate(-50%, -50%);
+      animation: scorePop 0.8s ease-out forwards;
+    }
+    @keyframes scorePop {
+      0% { opacity: 1; transform: translate(-50%, -50%) scale(0.5); }
+      40% { opacity: 1; transform: translate(-50%, calc(-50% - 20px)) scale(1.2); }
+      100% { opacity: 0; transform: translate(-50%, calc(-50% - 60px)) scale(0.8); }
+    }
+
+    /* Kill counter HUD */
+    #kill-counter {
+      position: fixed;
+      top: 90px;
+      right: 30px;
+      z-index: 99994;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      color: #ff007f;
+      text-shadow: 0 0 10px rgba(255, 0, 127, 0.5);
+      pointer-events: none;
+      border: 1px solid rgba(255, 0, 127, 0.2);
+      background: rgba(2, 4, 10, 0.7);
+      padding: 8px 16px;
+      border-radius: 2px;
+      backdrop-filter: blur(6px);
+    }
+    #kill-counter span {
+      color: #00f7ff;
+      text-shadow: 0 0 10px #00f7ff;
+    }
+
+    @media(max-width:1024px){
+      .hero {
+        flex-direction: column-reverse;
+        justify-content: center;
+        text-align: center;
+        padding: 140px 24px 60px 24px;
+      }
+      .hero-content {
+        max-width: 100%;
+        margin-top: 20px;
+      }
+      .hero h1{ font-size:44px; }
+      .hero h1::before, .hero h1::after { display: none; } 
+      #canvas-container { width: 100%; height: 55vh; }
+      header { padding: 20px 5%; }
+      nav { display: none; }
+      
+      .timeline::after { left: 30px; }
+      .timeline-item { width: 100%; padding-left: 60px; padding-right: 20px; }
+      .timeline-item.left { text-align: left; }
+      .timeline-item.left::after, .timeline-item.right::after { left: 24px; }
+      .timeline-item.right { left: 0; }
+      
+      .closing-cta h2 { font-size: 32px; }
+
+      body.custom-cursor-active { cursor: auto; }
+      #mini-cyborg-cursor { display: none !important; }
+    }
+  </style>
+</head>
+<body id="app-body">
+  <div id="spaceship-layer" aria-hidden="true"></div>
+  <div id="kill-counter" aria-live="polite">KILLS: <span id="kill-count">0</span></div>
+  <div id="rage-overlay" aria-hidden="true"></div>
+  <div id="rage-vignette" aria-hidden="true"></div>
+  <div id="rage-meter" aria-live="assertive">ANGER LVL: <span id="rage-level">0</span>/7</div>
+  <div id="rage-hang" aria-hidden="true">
+    <div id="rage-hang-text">⚠ NEURAL OVERLOAD ⚠</div>
+    <div id="rage-hang-sub">SYSTEM REBOOT IN PROGRESS...</div>
+    <div id="rage-bar-wrap"><div id="rage-bar-fill"></div></div>
+  </div>
+  <div id="mini-cyborg-cursor" aria-hidden="true">
+    <svg class="cyborg-svg" viewBox="0 0 44 52" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="cyborgMetal" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#1e293b"/>
+          <stop offset="100%" stop-color="#0f172a"/>
+        </linearGradient>
+      </defs>
+      <!-- Torso -->
+      <rect x="12" y="28" width="20" height="18" rx="2" fill="url(#cyborgMetal)" stroke="#334155" stroke-width="0.8"/>
+      <circle cx="22" cy="34" r="4" fill="#ff0055" opacity="0.9">
+        <animate attributeName="r" values="3.5;4.5;3.5" dur="1.5s" repeatCount="indefinite"/>
+      </circle>
+      <!-- Neck -->
+      <rect x="18" y="24" width="8" height="5" fill="#475569"/>
+      <!-- Head left -->
+      <path d="M8 8 L22 6 L22 22 L8 24 Z" fill="#111622" stroke="#00f7ff" stroke-width="0.6" opacity="0.95"/>
+      <!-- Head right exposed -->
+      <path d="M22 6 L36 8 L36 24 L22 22 Z" fill="#334155" stroke="#ff0055" stroke-width="0.6"/>
+      <!-- Cyan visor -->
+      <rect class="eye-cyan" x="10" y="12" width="9" height="3" rx="1" fill="#00f7ff"/>
+      <!-- Pink monocle -->
+      <circle cx="30" cy="14" r="4" fill="none" stroke="#ff0055" stroke-width="1.2"/>
+      <circle class="monocle-lens" cx="30" cy="14" r="2" fill="#ff0055"/>
+      <!-- Arm stubs -->
+      <rect x="4" y="30" width="6" height="12" rx="1" fill="#111622"/>
+      <rect x="34" y="30" width="6" height="12" rx="1" fill="#334155"/>
+      <line x1="37" y1="32" x2="37" y2="40" stroke="#ff0055" stroke-width="1"/>
+    </svg>
+  </div>
+  <div class="ambient-glow"></div>
+  
+  <div id="main-content">
+  <header>
+    <div class="logo">CYBORG-X</div>
+    <nav>
+      <a href="#problem">Limitations</a>
+      <a href="#specs">Modules</a>
+      <a href="#process">Integration</a>
+      <a href="#security">Security</a>
+      <a href="#terminal">Terminal</a>
+    </nav>
+  </header>
+
+  <section class="hero" id="hero-sec">
+    <div class="hero-content">
+      <h1>Upgrade Your Biological Limits</h1>
+      <p>
+        Seamlessly integrate with neural cybernetic frameworks. Synthesize your cognition, enhance sensory perceptions, and manipulate reality with cutting-edge visual arrays.
+      </p>
+      <div class="btn" id="target-btn">Initiate Matrix Sync</div>
+    </div>
+    
+    <div id="canvas-container">
+      <div id="cyborg-hud" aria-hidden="true">
+        <!-- Full canvas background layer: binary rain + neural net + hex grid -->
+        <canvas id="hud-canvas"></canvas>
+        <!-- Neural expand rings -->
+        <div class="hud-neural-ring"></div>
+        <div class="hud-neural-ring"></div>
+        <div class="hud-neural-ring"></div>
+        <!-- Glitch slices -->
+        <div class="hud-glitch-slice"></div>
+        <div class="hud-glitch-slice"></div>
+        <div class="hud-glitch-slice"></div>
+        <!-- Corner brackets -->
+        <div class="hud-corner hud-corner-tl"></div>
+        <div class="hud-corner hud-corner-tr"></div>
+        <div class="hud-corner hud-corner-bl"></div>
+        <div class="hud-corner hud-corner-br"></div>
+        <!-- Top sector label -->
+        <div class="hud-sector-label">CYBORG-X · UNIT 01</div>
+        <!-- Diagonal dividers -->
+        <div class="hud-diag hud-diag-1"></div>
+        <div class="hud-diag hud-diag-2"></div>
+        <!-- System log (top-left) -->
+        <div class="hud-log" id="hud-log"></div>
+        <!-- Network packets (top-right) -->
+        <div class="hud-packets">
+          <div class="hud-packets-label">NET I/O</div>
+          <div class="hud-pkt-row"><div class="hud-pkt-dot c"></div></div>
+          <div class="hud-pkt-row"><div class="hud-pkt-dot p"></div></div>
+          <div class="hud-pkt-row"><div class="hud-pkt-dot o"></div></div>
+          <div class="hud-pkt-row"><div class="hud-pkt-dot v"></div></div>
+          <div class="hud-pkt-row"><div class="hud-pkt-dot c"></div></div>
+          <div class="hud-pkt-row"><div class="hud-pkt-dot p"></div></div>
+        </div>
+        <!-- Left data panel -->
+        <div class="hud-panel-left">
+          <div class="hud-data-row">
+            <span class="hud-label">NEURAL</span>
+            <span class="hud-value" id="hud-neural">98.4%</span>
+            <div class="hud-bar"><div class="hud-bar-fill" id="hud-bar-neural" style="width:98%"></div></div>
+          </div>
+          <div class="hud-data-row">
+            <span class="hud-label">SYNAPSE</span>
+            <span class="hud-value" id="hud-synapse">10.0Gb</span>
+            <div class="hud-bar"><div class="hud-bar-fill" id="hud-bar-synapse" style="width:82%"></div></div>
+          </div>
+          <div class="hud-data-row">
+            <span class="hud-label">KINETIC</span>
+            <span class="hud-value" id="hud-kinetic">72HR</span>
+            <div class="hud-bar"><div class="hud-bar-fill" id="hud-bar-kinetic" style="width:60%"></div></div>
+          </div>
+          <div class="hud-data-row">
+            <span class="hud-label">THREAT</span>
+            <span class="hud-value" id="hud-threat">LOW</span>
+            <div class="hud-bar"><div class="hud-bar-fill" id="hud-bar-threat" style="width:12%"></div></div>
+          </div>
+        </div>
+        <!-- Right gauge panel -->
+        <div class="hud-panel-right">
+          <div class="hud-gauge">
+            <svg viewBox="0 0 56 56">
+              <circle class="hud-gauge-track" cx="28" cy="28" r="22"/>
+              <circle class="hud-gauge-fill cyan" cx="28" cy="28" r="22"/>
+            </svg>
+            <div class="hud-gauge-label">PWR</div>
+          </div>
+          <div class="hud-gauge">
+            <svg viewBox="0 0 56 56">
+              <circle class="hud-gauge-track" cx="28" cy="28" r="22"/>
+              <circle class="hud-gauge-fill pink" cx="28" cy="28" r="22"/>
+            </svg>
+            <div class="hud-gauge-label">SYN</div>
+          </div>
+          <div class="hud-gauge">
+            <svg viewBox="0 0 56 56">
+              <circle class="hud-gauge-track" cx="28" cy="28" r="22"/>
+              <circle class="hud-gauge-fill orange" cx="28" cy="28" r="22"/>
+            </svg>
+            <div class="hud-gauge-label">OPT</div>
+          </div>
+        </div>
+        <!-- Targeting reticle -->
+        <svg class="hud-reticle" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M8 8 L22 8 M8 8 L8 22" stroke="#00f7ff" stroke-width="1.5" stroke-opacity="0.7"/>
+          <path d="M56 8 L42 8 M56 8 L56 22" stroke="#00f7ff" stroke-width="1.5" stroke-opacity="0.7"/>
+          <path d="M8 56 L22 56 M8 56 L8 42" stroke="#00f7ff" stroke-width="1.5" stroke-opacity="0.7"/>
+          <path d="M56 56 L42 56 M56 56 L56 42" stroke="#00f7ff" stroke-width="1.5" stroke-opacity="0.7"/>
+          <circle cx="32" cy="32" r="10" stroke="#ff007f" stroke-width="0.8" stroke-opacity="0.5" stroke-dasharray="4 4"/>
+          <circle cx="32" cy="32" r="2" fill="#ff007f" fill-opacity="0.6"/>
+        </svg>
+        <!-- Radar sweep (bottom-left) -->
+        <div class="hud-radar">
+          <canvas class="hud-radar-canvas" id="hud-radar-canvas"></canvas>
+          <div class="hud-radar-label">PROXIMITY</div>
+        </div>
+        <!-- Biometric waveform (bottom-right) -->
+        <div class="hud-wave">
+          <canvas class="hud-wave-canvas" id="hud-wave-canvas"></canvas>
+          <div class="hud-wave-label">BIOSIG</div>
+        </div>
+        <!-- Status badge (center bottom) -->
+        <div class="hud-status-badge" id="hud-status">SYS: ONLINE</div>
+        <!-- Coord display -->
+        <div class="hud-coord hud-coord-bl" id="hud-coord-bl">LAT:35.6°N&nbsp;LON:139.7°E</div>
+        <div class="hud-coord hud-coord-br" id="hud-coord-br">ALT:+312m&nbsp;UTC:+09</div>
+        <!-- Vertical data streams -->
+        <div class="hud-stream hud-stream-l">
+          <div class="hud-stream-inner" id="hud-stream-l-inner"></div>
+        </div>
+        <div class="hud-stream hud-stream-r">
+          <div class="hud-stream-inner" id="hud-stream-r-inner"></div>
+        </div>
+        <!-- Bottom scan line + steps -->
+        <div class="hud-scan-line"></div>
+        <div class="hud-scan-cursor"></div>
+        <div class="hud-steps">
+          <div class="hud-step"></div>
+          <div class="hud-step"></div>
+          <div class="hud-step"></div>
+          <div class="hud-step"></div>
+          <div class="hud-step"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="content-section" id="problem">
+    <div class="door-hinge"></div>
+    <div class="door-light door-light-left-1"></div>
+    <div class="door-light door-light-left-2"></div>
+    <div class="door-light door-light-left-3"></div>
+    <div class="door-light door-light-left-4"></div>
+    <div class="door-light door-light-right-1"></div>
+    <div class="door-light door-light-right-2"></div>
+    <div class="door-light door-light-right-3"></div>
+    <div class="door-light door-light-right-4"></div>
+    <h2 class="section-title">The Human <span>Limitation</span></h2>
+    <div class="problem-grid">
+      <div class="problem-card">
+        <h3>Cognitive Burnout</h3>
+        <p>The human brain cannot process modern high-density data streams. Sub-optimal synaptogenesis stalls complex, multi-threaded calculation rendering organic structures obsolete.</p>
+      </div>
+      <div class="problem-card">
+        <h3>Physical Degradation</h3>
+        <p>Biological exhaustion triggers critical downtime. Sleep mandates, chronic fatigue thresholds, and baseline sensory barriers continuously decay potential output parameters.</p>
+      </div>
+      <div class="problem-card">
+        <h3>The Evolution Gap</h3>
+        <p>Silicon and quantum architectures are expanding exponentially across dimensional barriers. Meanwhile, human biology remains completely static, bound to prehistoric rules.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="content-section" id="specs">
+    <div class="door-hinge"></div>
+    <div class="door-light door-light-left-1"></div>
+    <div class="door-light door-light-left-2"></div>
+    <div class="door-light door-light-left-3"></div>
+    <div class="door-light door-light-left-4"></div>
+    <div class="door-light door-light-right-1"></div>
+    <div class="door-light door-light-right-2"></div>
+    <div class="door-light door-light-right-3"></div>
+    <div class="door-light door-light-right-4"></div>
+    <h2 class="section-title">System <span>Modules</span> Matrix</h2>
+    <div class="matrix-table-container">
+      <table class="matrix-table">
+        <thead>
+          <tr>
+            <th>Module Hardware</th>
+            <th>Component Upgrade</th>
+            <th>Feature Architectural Description</th>
+            <th>Performance Spec</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr >
+            <td class="feature-name">🧠 Neural Link</td>
+            <td>Synapse-X</td>
+            <td>Direct brain-to-computer wireless streaming. Bypasses standard sensory pathways for instant conceptual transfer.</td>
+            <td><span class="spec-badge">10 Gbps Bi-Directional</span></td>
+          </tr>
+          <tr >
+            <td class="feature-name">👁️ Ocular Array</td>
+            <td>Visor-R</td>
+            <td>Quantum-dot augmented reality overlay with integrated deep thermal imaging and kinetic vector forecasting.</td>
+            <td><span class="spec-badge">240Hz / 0ms Latency</span></td>
+          </tr>
+          <tr >
+            <td class="feature-name">⚡ Biometric Reactor</td>
+            <td>Kinetic Core</td>
+            <td>Synthetic metabolic node converting standard atomic body movement into constant localized system power. Eliminates standard sleep limits.</td>
+            <td><span class="spec-badge">72-Hour Peak Output</span></td>
+          </tr>
+          <tr >
+            <td class="feature-name">🛡️ Dermal Armor</td>
+            <td>Carbon-Weave</td>
+            <td>Sub-dermal lattice layer designed with fluid impact dynamics. Maximizes structural physical endurance.</td>
+            <td><span class="spec-badge">Impact Grade 3 Certified</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="content-section" id="process">
+    <div class="door-hinge"></div>
+    <div class="door-light door-light-left-1"></div>
+    <div class="door-light door-light-left-2"></div>
+    <div class="door-light door-light-left-3"></div>
+    <div class="door-light door-light-left-4"></div>
+    <div class="door-light door-light-right-1"></div>
+    <div class="door-light door-light-right-2"></div>
+    <div class="door-light door-light-right-3"></div>
+    <div class="door-light door-light-right-4"></div>
+    <h2 class="section-title">The Integration <span>Process</span></h2>
+    <div class="timeline">
+      <div class="timeline-item left">
+        <div class="timeline-content">
+          <span class="phase-tag">PHASE 01</span>
+          <h3>Neural Mapping</h3>
+          <p>Non-invasive diagnostic scanning maps out your brain's unique synaptic signature. High-resolution telemetry matrices isolate raw cognitive pathways without altering your persona baseline.</p>
+        </div>
+      </div>
+      <div class="timeline-item right">
+        <div class="timeline-content">
+          <span class="phase-tag">PHASE 02</span>
+          <h3>Core Synthesis</h3>
+          <p>Seamless structural integration of the hardware chassis with your primary central nervous system. Micro-filaments link directly to key biological centers under self-assembling bio-gel layers.</p>
+        </div>
+      </div>
+      <div class="timeline-item left">
+        <div class="timeline-content">
+          <span class="phase-tag">PHASE 03</span>
+          <h3>Matrix Calibration</h3>
+          <p>Initial safe boot sequence execution. Real-time visual array optimization, bio-feedback metric synchronization, and activation of localized standalone quantum firewalls.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="content-section" id="security">
+    <div class="door-hinge"></div>
+    <div class="door-light door-light-left-1"></div>
+    <div class="door-light door-light-left-2"></div>
+    <div class="door-light door-light-left-3"></div>
+    <div class="door-light door-light-left-4"></div>
+    <div class="door-light door-light-right-1"></div>
+    <div class="door-light door-light-right-2"></div>
+    <div class="door-light door-light-right-3"></div>
+    <div class="door-light door-light-right-4"></div>
+    <h2 class="section-title">Security &amp; <span>Compliance</span></h2>
+    <div class="security-grid">
+      <div class="security-card">
+        <h3>Biocompatibility Certifications</h3>
+        <p>Engineered entirely out of medical-grade synthetic titanium and bio-inert polymers. Completely eliminates systemic tissue rejection risks or automated immune responses.</p>
+      </div>
+      <div class="security-card">
+        <h3>Quantum Encryption Privacy</h3>
+        <p>Your thoughts stay exclusively yours. All memory cache files leverage localized, decentralized state-level encryption configurations with absolute zero external cloud network leaks.</p>
+      </div>
+      <div class="security-card">
+        <h3>Full Structural Reversibility</h3>
+        <p>Every single modification can be safely deactivated, placed into deep hibernation, or completely extracted back to standard legacy biological limits at any licensed facility.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="content-section" id="terminal">
+    <div class="door-hinge"></div>
+    <div class="door-light door-light-left-1"></div>
+    <div class="door-light door-light-left-2"></div>
+    <div class="door-light door-light-left-3"></div>
+    <div class="door-light door-light-left-4"></div>
+    <div class="door-light door-light-right-1"></div>
+    <div class="door-light door-light-right-2"></div>
+    <div class="door-light door-light-right-3"></div>
+    <div class="door-light door-light-right-4"></div>
+    <h2 class="section-title">Interactive <span>Terminal / FAQs</span></h2>
+    <div class="faq-container">
+      <div class="faq-item">
+        <button class="faq-trigger">Does the integration process hurt?</button>
+        <div class="faq-content">
+          <p>Not at all. During Phase 02, localized neuro-blockers completely decouple pain receptors in the targeted zones. Post-integration, the Synapse-X link recalibrates sensory signals, making the cybernetics feel entirely natural—like a native limb or organ.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-trigger">How often does the hardware require firmware updates?</button>
+        <div class="faq-content">
+          <p>Firmware updates are calculated and parsed locally via your micro-chassis background processors. Critical security adjustments patch dynamically over quantum frequencies without interrupting your cognitive flow or sleep cycles.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-trigger">Is Cyborg-X compatible with legacy medical implants?</button>
+        <div class="faq-content">
+          <p>Yes. The diagnostic mapping protocols running in Phase 01 actively isolate old pacemakers, ocular replacements, or standard orthopedic pins, safely building an automated isolation matrix around them to prevent electrical arc interferences.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="content-section closing-cta">
+    <div class="door-hinge"></div>
+    <div class="door-light door-light-left-1"></div>
+    <div class="door-light door-light-left-2"></div>
+    <div class="door-light door-light-left-3"></div>
+    <div class="door-light door-light-left-4"></div>
+    <div class="door-light door-light-right-1"></div>
+    <div class="door-light door-light-right-2"></div>
+    <div class="door-light door-light-right-3"></div>
+    <div class="door-light door-light-right-4"></div>
+    <h2>The Future Is Waiting.<br>Don't Get Left Behind In The Biological Era.</h2>
+    <p>Step outside the terminal boundaries of organic flesh and transition into apex architecture.</p>
+    <div class="btn" id="footer-btn">Secure Your Upgrade</div>
+  </section>
+
+  <footer>
+    &copy; 2026 CYBORG-X TECH INC. PROJECT SYNAPSE ALL RIGHTS RESERVED. SECURE LOCAL MEMORY MATRIX PROTOCOL ENABLED.
+  </footer>
+  </div><!-- /#main-content -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <script>
+    // --- 1. System Setup ---
+    const container = document.getElementById('canvas-container');
+    const scene = new THREE.Scene();
+    
+    // Close-up portrait framing: head + shoulders like reference image
+    const camera = new THREE.PerspectiveCamera(38, container.clientWidth / container.clientHeight, 0.1, 100);
+    camera.position.set(0, 0.12, 4.0);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setSize(container.clientWidth, container.clientHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.4;
+    container.appendChild(renderer.domElement);
+
+    // --- 2. Advanced High-Contrast Cyber Lights ---
+    const ambientLight = new THREE.AmbientLight(0x0a0c14, 2.2);
+    scene.add(ambientLight);
+
+    // Warm orange-red key light (left — dramatic like movie poster)
+    const keyNeonPink = new THREE.DirectionalLight(0xff3300, 5.5);
+    keyNeonPink.position.set(-5, 3, 4);
+    scene.add(keyNeonPink);
+
+    // Cool blue-white rim light (right)
+    const rimCyanLight = new THREE.DirectionalLight(0x99ccff, 4.0);
+    rimCyanLight.position.set(6, 2, 2);
+    scene.add(rimCyanLight);
+
+    // Top fill — subtle silver
+    const topFill = new THREE.DirectionalLight(0x8899aa, 1.2);
+    topFill.position.set(0, 8, 2);
+    scene.add(topFill);
+
+    // Glowing eye point light
+    const coreEnergyLight = new THREE.PointLight(0x00f7ff, 3.5, 3.5);
+    coreEnergyLight.position.set(-0.22, 0.3 + 1.0, 0.9);
+    scene.add(coreEnergyLight);
+
+    // Under-chin orange bounce
+    const chinBounce = new THREE.PointLight(0xff4400, 1.2, 4.0);
+    chinBounce.position.set(-0.3, -0.5, 1.4);
+    scene.add(chinBounce);
+
+    // --- 3. Realistic Cyborg Materials ---
+    // Primary chrome-steel (bright, highly reflective)
+    const heavyCarbonMat = new THREE.MeshStandardMaterial({
+      color: 0xb0bec5,
+      metalness: 1.0,
+      roughness: 0.14,
+    });
+
+    // Darker structural / recessed panel
+    const exposedChassisMat = new THREE.MeshStandardMaterial({
+      color: 0x3d5060,
+      metalness: 0.92,
+      roughness: 0.32
+    });
+
+    const neonCrimsonGlow = new THREE.MeshBasicMaterial({ color: 0xff0055 });
+    const neonCyanGlow = new THREE.MeshBasicMaterial({ color: 0x00f7ff });
+
+    // Cyborg Base Build Layout Group
+    const cyborgGroup = new THREE.Group();
+
+    // --- CYBORG HEAD SYSTEM (Asymmetrical Visuals) ---
+    const headGroup = new THREE.Group();
+    headGroup.position.y = 1.0; 
+
+    const headMeshGroup = new THREE.Group();
+    
+    // Left Base Frame (Organic/Sleek Carbon Profile)
+    const leftSkullGeo = new THREE.BoxGeometry(0.46, 1.0, 0.95);
+    const leftSkull = new THREE.Mesh(leftSkullGeo, heavyCarbonMat);
+    leftSkull.position.x = -0.23;
+    headMeshGroup.add(leftSkull);
+
+    // Right Base Frame (Exposed Raw Hardware Structural Plates)
+    const rightSkullGeo = new THREE.BoxGeometry(0.44, 0.94, 0.9);
+    const rightSkull = new THREE.Mesh(rightSkullGeo, exposedChassisMat);
+    rightSkull.position.set(0.22, -0.03, -0.02);
+    headMeshGroup.add(rightSkull);
+
+    // Mechanical Jaw Array
+    const leftJaw = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.15, 0.4, 4), heavyCarbonMat);
+    leftJaw.position.set(-0.2, -0.5, 0.1);
+    leftJaw.rotation.x = 0.1;
+    
+    const rightExposedJaw = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.35, 0.35), exposedChassisMat);
+    rightExposedJaw.position.set(0.18, -0.48, 0.12);
+    headMeshGroup.add(leftJaw, rightExposedJaw);
+
+    // Asymmetrical Ocular Optics (Left Cyber Visor vs Right Heavy Monocle)
+    const leftVisor = new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.1, 0.12), neonCyanGlow);
+    leftVisor.position.set(-0.22, 0.15, 0.46);
+    
+    // Right Aggressive Monocle Camera Stack
+    const rightMonocleBase = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.16, 0.2, 8), exposedChassisMat);
+    rightMonocleBase.position.set(0.22, 0.15, 0.45);
+    rightMonocleBase.rotation.x = Math.PI / 2;
+    
+    const rightMonocleLens = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.09, 0.06, 8), neonCrimsonGlow);
+    rightMonocleLens.position.set(0.22, 0.15, 0.54);
+    rightMonocleLens.rotation.x = Math.PI / 2;
+    headMeshGroup.add(leftVisor, rightMonocleBase, rightMonocleLens);
+
+    // Exposed Neural Brain Stem Capsule (Top Center Head Accent)
+    const neuralCapsule = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.22, 0.2, 12), exposedChassisMat);
+    neuralCapsule.position.set(0, 0.52, -0.05);
+    const neuralGlowRing = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.18, 0.06, 12), neonCrimsonGlow);
+    neuralGlowRing.position.set(0, 0.6, -0.05);
+    headMeshGroup.add(neuralCapsule, neuralGlowRing);
+
+    headGroup.add(headMeshGroup);
+    cyborgGroup.add(headGroup);
+
+    // ═══ REALISTIC DETAILS — Bolts, Screws, Panel Seams, Weathering ═══
+    // Forehead screws/bolts (8 small rivets across forehead panels)
+    const boltMat = new THREE.MeshStandardMaterial({ color: 0x2a3540, metalness: 0.9, roughness: 0.6 });
+    for (let bx = -3; bx <= 4; bx++) {
+      const bolt = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.018, 0.025, 8), boltMat);
+      bolt.position.set(bx * 0.12, 0.40 + Math.sin(bx * 0.5) * 0.08, 0.62);
+      bolt.rotation.x = Math.PI / 2;
+      headMeshGroup.add(bolt);
+    }
+
+    // Cheekbone panel seams (thin dark lines showing plate boundaries)
+    const seamMat = new THREE.MeshBasicMaterial({ color: 0x0a0d12 });
+    const leftSeam1 = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.008, 0.02), seamMat);
+    leftSeam1.position.set(-0.30, 0.22, 0.56);
+    leftSeam1.rotation.z = -0.3;
+    headMeshGroup.add(leftSeam1);
+
+    const rightSeam1 = new THREE.Mesh(new THREE.BoxGeometry(0.25, 0.008, 0.02), seamMat);
+    rightSeam1.position.set(0.32, 0.24, 0.54);
+    rightSeam1.rotation.z = 0.3;
+    headMeshGroup.add(rightSeam1);
+
+    // Jaw hinge mechanism — visible mechanical jaw joints
+    const hingeL = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 0.08, 10), exposedChassisMat);
+    hingeL.rotation.z = Math.PI / 2;
+    hingeL.position.set(-0.46, -0.28, 0.14);
+    headMeshGroup.add(hingeL);
+
+    const hingeR = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 0.08, 10), exposedChassisMat);
+    hingeR.rotation.z = Math.PI / 2;
+    hingeR.position.set(0.46, -0.28, 0.14);
+    headMeshGroup.add(hingeR);
+
+    // Temple vents (small horizontal slits for heat dissipation)
+    for (let v = 0; v < 3; v++) {
+      const ventL = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.018, 0.025), seamMat);
+      ventL.position.set(-0.58, 0.28 - v * 0.06, 0.16);
+      headMeshGroup.add(ventL);
+
+      const ventR = new THREE.Mesh(new THREE.BoxGeometry(0.13, 0.018, 0.025), seamMat);
+      ventR.position.set(0.58, 0.28 - v * 0.06, 0.16);
+      headMeshGroup.add(ventR);
+    }
+
+    // Micro panel screws around eyes (security bolts)
+    for (let e = 0; e < 4; e++) {
+      const eyeBoltL = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.015, 6), boltMat);
+      const angle = (Math.PI * 2 * e) / 4;
+      eyeBoltL.position.set(-0.22 + Math.cos(angle) * 0.18, 0.15 + Math.sin(angle) * 0.08, 0.62);
+      eyeBoltL.rotation.x = Math.PI / 2;
+      headMeshGroup.add(eyeBoltL);
+    }
+
+    // Nose bridge detail ridges (realistic contour lines)
+    for (let n = 0; n < 4; n++) {
+      const noseRidge = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.005, 0.015), seamMat);
+      noseRidge.position.set(-0.08, 0.12 - n * 0.055, 0.66);
+      noseRidge.rotation.x = 0.15;
+      headMeshGroup.add(noseRidge);
+    }
+
+    // Chin bolts (4 larger bolts across jawline)
+    for (let c = 0; c < 4; c++) {
+      const chinBolt = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.022, 0.03, 8), boltMat);
+      chinBolt.position.set(-0.15 + c * 0.10, -0.44, 0.58);
+      chinBolt.rotation.x = Math.PI / 2;
+      headMeshGroup.add(chinBolt);
+    }
+
+    // Neural capsule mounting brackets (visible support structure on top of head)
+    const bracketL = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.08, 0.06), exposedChassisMat);
+    bracketL.position.set(-0.14, 0.58, 0.08);
+    bracketL.rotation.z = 0.2;
+    headMeshGroup.add(bracketL);
+
+    const bracketR = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.08, 0.06), exposedChassisMat);
+    bracketR.position.set(0.14, 0.58, 0.08);
+    bracketR.rotation.z = -0.2;
+    headMeshGroup.add(bracketR);
+
+    // Realistic wear marks — small scratches/dents (darker spots on plates)
+    const wearMat = new THREE.MeshStandardMaterial({ color: 0x1a2028, metalness: 0.7, roughness: 0.8 });
+    for (let w = 0; w < 12; w++) {
+      const wear = new THREE.Mesh(new THREE.BoxGeometry(
+        0.02 + Math.random() * 0.04,
+        0.008 + Math.random() * 0.015,
+        0.008
+      ), wearMat);
+      wear.position.set(
+        -0.4 + Math.random() * 0.8,
+        -0.1 + Math.random() * 0.6,
+        0.48 + Math.random() * 0.15
+      );
+      wear.rotation.z = Math.random() * Math.PI;
+      headMeshGroup.add(wear);
+    }
+
+    // Eye socket detail rings (realistic eyelid-like mechanical rings)
+    const eyeRingL = new THREE.Mesh(new THREE.TorusGeometry(0.17, 0.012, 8, 16), exposedChassisMat);
+    eyeRingL.position.set(-0.22, 0.15, 0.58);
+    headMeshGroup.add(eyeRingL);
+
+    const eyeRingR = new THREE.Mesh(new THREE.TorusGeometry(0.14, 0.010, 8, 16), exposedChassisMat);
+    eyeRingR.position.set(0.22, 0.15, 0.56);
+    headMeshGroup.add(eyeRingR);
+
+    // Forehead data port (small hexagonal inset — USB-C style)
+    const dataPort = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 0.04, 6), seamMat);
+    dataPort.position.set(0.24, 0.48, 0.58);
+    dataPort.rotation.x = Math.PI / 2;
+    headMeshGroup.add(dataPort);
+    const dataPortInner = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.015, 0.02, 6), neonCyanGlow);
+    dataPortInner.position.set(0.24, 0.48, 0.60);
+    dataPortInner.rotation.x = Math.PI / 2;
+    headMeshGroup.add(dataPortInner);
+
+    // Neck piston details and bolts added after neckGroup is defined below
+    // ═══ END REALISTIC DETAILS (neck details follow after neck declaration) ═══
+    const chestSeamL = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.68, 0.015), seamMat);
+    chestSeamL.position.set(-0.62, -0.12, 0.50);
+    cyborgGroup.add(chestSeamL);
+
+    const chestSeamR = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.65, 0.015), seamMat);
+    chestSeamR.position.set(0.60, -0.12, 0.48);
+    cyborgGroup.add(chestSeamR);
+
+    // Chest panel bolts (12 bolts across chest plates)
+    for (let cb = 0; cb < 12; cb++) {
+      const chestBolt = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.018, 0.025, 8), boltMat);
+      const side = cb < 6 ? -1 : 1;
+      const idx = cb % 6;
+      chestBolt.position.set(
+        side * (0.25 + (idx % 3) * 0.14),
+        -0.04 - Math.floor(idx / 3) * 0.18,
+        0.56
+      );
+      chestBolt.rotation.x = Math.PI / 2;
+      cyborgGroup.add(chestBolt);
+    }
+
+    // Reactor core support brackets (3 mechanical arms holding core)
+    for (let rc = 0; rc < 3; rc++) {
+      const angle = (Math.PI * 2 * rc) / 3;
+      const bracket = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.12, 0.04), exposedChassisMat);
+      bracket.position.set(
+        Math.cos(angle) * 0.16,
+        -0.1,
+        0.50 + Math.sin(angle) * 0.05
+      );
+      bracket.rotation.y = angle;
+      cyborgGroup.add(bracket);
+    }
+
+    // Shoulder joint pistons (realistic ball-joint mechanics)
+    const lShoulderPiston = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 0.14, 10), exposedChassisMat);
+    lShoulderPiston.position.set(-0.88, 0.12, 0.14);
+    lShoulderPiston.rotation.z = Math.PI / 4;
+    cyborgGroup.add(lShoulderPiston);
+
+    const rShoulderPiston = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 0.14, 10), exposedChassisMat);
+    rShoulderPiston.position.set(0.88, 0.12, 0.14);
+    rShoulderPiston.rotation.z = -Math.PI / 4;
+    cyborgGroup.add(rShoulderPiston);
+
+    // Bicep segment lines (muscle-like panel divisions)
+    for (let seg = 0; seg < 4; seg++) {
+      const lSegment = new THREE.Mesh(new THREE.TorusGeometry(0.145, 0.008, 8, 16), seamMat);
+      lSegment.position.set(-1.05, -0.28 - seg * 0.08, 0);
+      lSegment.rotation.x = Math.PI / 2;
+      cyborgGroup.add(lSegment);
+    }
+
+    // Arm cable housings (protective conduit along bicep)
+    const lArmConduit = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.65, 0.04), exposedChassisMat);
+    lArmConduit.position.set(-1.14, -0.40, 0.08);
+    cyborgGroup.add(lArmConduit);
+
+    const rArmConduit = new THREE.Mesh(new THREE.BoxGeometry(0.035, 0.62, 0.035), exposedChassisMat);
+    rArmConduit.position.set(1.12, -0.40, 0.08);
+    cyborgGroup.add(rArmConduit);
+
+    // ═══ END REALISTIC DETAILS ═══
+
+    // --- NECK DESIGN (Hydraulic Piston System) ---
+    const neckGroup = new THREE.Group();
+    neckGroup.position.y = 0.35;
+    const centralColumn = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.18, 0.35, 8), exposedChassisMat);
+    neckGroup.add(centralColumn);
+    
+    // Side Cable Guides
+    const leftCable = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.32, 6), heavyCarbonMat);
+    leftCable.position.set(-0.16, 0, 0.05);
+    leftCable.rotation.z = 0.15;
+    const rightCable = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.32, 6), neonCrimsonGlow);
+    rightCable.position.set(0.16, 0, 0.05);
+    rightCable.rotation.z = -0.15;
+    neckGroup.add(leftCable, rightCable);
+    cyborgGroup.add(neckGroup);
+
+    // ── Neck piston details (add now that neckGroup exists) ──
+    for (let p = 0; p < 4; p++) {
+      const angle = (Math.PI * 2 * p) / 4 + Math.PI / 4;
+      const piston = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.018, 0.15, 8), exposedChassisMat);
+      piston.position.set(Math.cos(angle) * 0.18, 0.26, Math.sin(angle) * 0.18);
+      piston.rotation.x = Math.PI / 8;
+      neckGroup.add(piston);
+    }
+    // Neck ring bolts
+    for (let r = 0; r < 3; r++) {
+      for (let b = 0; b < 8; b++) {
+        const angle = (Math.PI * 2 * b) / 8;
+        const neckBolt = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.015, 6), boltMat);
+        neckBolt.position.set(
+          Math.cos(angle) * 0.21,
+          0.10 - r * 0.12,
+          Math.sin(angle) * 0.21
+        );
+        neckGroup.add(neckBolt);
+      }
+    }
+
+    // --- TORSO SYSTEM (Nested Arc Reactor Energy Core) ---
+    const leftChestPlate = new THREE.Mesh(new THREE.BoxGeometry(0.75, 0.75, 1.1), heavyCarbonMat);
+    leftChestPlate.position.set(-0.38, -0.12, 0);
+    
+    const rightExposedRibs = new THREE.Mesh(new THREE.BoxGeometry(0.68, 0.7, 0.95), exposedChassisMat);
+    rightExposedRibs.position.set(0.36, -0.12, -0.05);
+    cyborgGroup.add(leftChestPlate, rightExposedRibs);
+
+    const spinalCol = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.24, 1.2, 6), exposedChassisMat);
+    spinalCol.position.y = -0.8;
+    cyborgGroup.add(spinalCol);
+
+    // Double-Tier Crimson Bio-Reactor Core Assembly
+    const reactorRim = new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.24, 0.15, 12), heavyCarbonMat);
+    reactorRim.position.set(0, -0.1, 0.5);
+    reactorRim.rotation.x = Math.PI / 2;
+    
+    const reactorCore = new THREE.Mesh(new THREE.SphereGeometry(0.16, 16, 16), neonCrimsonGlow);
+    reactorCore.position.set(0, -0.1, 0.55);
+    cyborgGroup.add(reactorRim, reactorCore);
+
+    // --- ASYMMETRICAL LIMB NODES ---
+    // Left Arm (Heavy Plated Exo-Sleeve)
+    const leftShoulderPod = new THREE.Mesh(new THREE.SphereGeometry(0.32, 16, 16), heavyCarbonMat);
+    leftShoulderPod.position.set(-1.05, 0.05, 0);
+    const leftBicep = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.12, 0.8, 8), heavyCarbonMat);
+    leftBicep.position.set(-1.05, -0.4, 0);
+    cyborgGroup.add(leftShoulderPod, leftBicep);
+
+    // Right Arm (Exposed Skeletal / Internal Frame Tubes)
+    const rightShoulderJoint = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.2, 0.35, 8), exposedChassisMat);
+    rightShoulderJoint.position.set(1.0, 0.05, 0);
+    rightShoulderJoint.rotation.z = Math.PI / 2;
+    
+    const rightBicepRod = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.07, 0.75, 6), exposedChassisMat);
+    rightBicepRod.position.set(1.0, -0.4, 0);
+    
+    const rightBicepCable = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 0.7, 4), neonCrimsonGlow);
+    rightBicepCable.position.set(1.06, -0.4, 0.06);
+    cyborgGroup.add(rightShoulderJoint, rightBicepRod, rightBicepCable);
+
+    scene.add(cyborgGroup);
+    cyborgGroup.position.set(0, -0.85, 0);
+
+    // --- Floating Techno Matrix Particle Grid ---
+    const particleCount = 140;
+    const particleGeometry = new THREE.BufferGeometry();
+    const particlePositions = new Float32Array(particleCount * 3);
+
+    for (let i = 0; i < particleCount * 3; i += 3) {
+      particlePositions[i] = (Math.random() - 0.5) * 10;
+      particlePositions[i + 1] = (Math.random() - 0.5) * 10;
+      particlePositions[i + 2] = (Math.random() - 0.5) * 5 - 2;
+    }
+    particleGeometry.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
+    
+    const particleMaterial = new THREE.PointsMaterial({
+      color: 0xff0055,
+      size: 0.035,
+      transparent: true,
+      opacity: 0.35,
+      blending: THREE.AdditiveBlending
+    });
+    const networkParticles = new THREE.Points(particleGeometry, particleMaterial);
+    scene.add(networkParticles);
+
+
+    // --- 4. Crimson Electric Lightning Generation Engine ---
+    const lightningSegmentsCount = 25; 
+    const lightningGeometry = new THREE.BufferGeometry();
+    const lightningPositions = new Float32Array(lightningSegmentsCount * 3);
+    lightningGeometry.setAttribute('position', new THREE.BufferAttribute(lightningPositions, 3));
+
+    const lightningMaterial = new THREE.LineBasicMaterial({ color: 0xff0055, linewidth: 5, transparent: true });
+    const lightningLine = new THREE.Line(lightningGeometry, lightningMaterial);
+    scene.add(lightningLine);
+
+    let electricalStrikeActive = false;
+    let strikeTimer = 0.0;
+    const totalStrikeDuration = 0.5;
+    let beamOriginPos = new THREE.Vector3();
+    let beamDestinationPos = new THREE.Vector3();
+
+    // --- 5. Mouse Interaction Variables ---
+    const targetPointer = new THREE.Vector2();
+    const currentPointer = new THREE.Vector2();
+
+    window.addEventListener('mousemove', (e) => {
+      targetPointer.x = (e.clientX / window.innerWidth) * 2 - 1;
+      targetPointer.y = -(e.clientY / window.innerHeight) * 2 + 1;
+    });
+
+    window.addEventListener('touchmove', (e) => {
+      if(e.touches.length > 0) {
+        targetPointer.x = (e.touches[0].clientX / window.innerWidth) * 2 - 1;
+        targetPointer.y = -(e.touches[0].clientY / window.innerHeight) * 2 + 1;
+      }
+    });
+
+    // --- 6. Click Target Projection Calculation ---
+    const syncBtn = document.getElementById('target-btn');
+    const footerBtn = document.getElementById('footer-btn');
+    const heroSection = document.getElementById('hero-sec');
+
+    let targetHeadRotX = 0;
+    let targetHeadRotY = 0;
+
+    function triggerLightningStrike(btnElement) {
+      if (electricalStrikeActive) return;
+
+      rightMonocleLens.getWorldPosition(beamOriginPos);
+
+      const rect = btnElement.getBoundingClientRect();
+      const pixelX = rect.left + rect.width / 2;
+      const pixelY = rect.top + rect.height / 2;
+
+      const ndcX = (pixelX / window.innerWidth) * 2 - 1;
+      const ndcY = -(pixelY / window.innerHeight) * 2 + 1;
+
+      const raycaster = new THREE.Raycaster();
+      raycaster.setFromCamera(new THREE.Vector2(ndcX, ndcY), camera);
+      
+      const foregroundPlane = new THREE.Plane(new THREE.Vector3(0, 0, 1), -3.5); 
+      raycaster.ray.intersectPlane(foregroundPlane, beamDestinationPos);
+
+      const localTarget = headGroup.worldToLocal(beamDestinationPos.clone());
+      targetHeadRotY = Math.atan2(localTarget.x, localTarget.z);
+      targetHeadRotX = -Math.atan2(localTarget.y, localTarget.z);
+
+      targetHeadRotY = THREE.MathUtils.clamp(targetHeadRotY, -0.8, 0.8);
+      targetHeadRotX = THREE.MathUtils.clamp(targetHeadRotX, -0.4, 0.4);
+
+      electricalStrikeActive = true;
+      strikeTimer = 0.0;
+
+      currentActiveBtn = btnElement;
+    }
+
+    let currentActiveBtn = syncBtn;
+
+    syncBtn.addEventListener('click', (e) => { e.preventDefault(); triggerLightningStrike(syncBtn); });
+    footerBtn.addEventListener('click', (e) => { e.preventDefault(); triggerLightningStrike(footerBtn); });
+
+    // ═══════════════════════════════════════════════════════
+    // CYBORG ANGER + BLAST SYSTEM
+    // Click the cyborg canvas 7 times → full screen energy blast
+    // ═══════════════════════════════════════════════════════
+    const rageOverlay   = document.getElementById('rage-overlay');
+    const rageVignette  = document.getElementById('rage-vignette');
+    const rageMeter     = document.getElementById('rage-meter');
+    const rageLevelEl   = document.getElementById('rage-level');
+    const canvasEl      = container; // the #canvas-container div
+
+    const RAGE_THRESHOLD = 7;       // clicks needed to trigger blast
+    const RAGE_DECAY_MS  = 2800;    // ms before anger level ticks down
+    let   rageCount      = 0;
+    let   rageDecayTimer = null;
+    let   blastActive    = false;
+
+    // Anger color ramp: maps rageCount → vignette opacity + colors
+    const angerColors = [
+      'transparent',
+      'rgba(255,80,0,0.08)',
+      'rgba(255,40,0,0.18)',
+      'rgba(255,20,0,0.28)',
+      'rgba(255,0,0,0.38)',
+      'rgba(220,0,0,0.50)',
+      'rgba(180,0,0,0.65)',
+    ];
+
+    function updateRageUI() {
+      // Vignette intensity
+      const vigAlpha = rageCount / RAGE_THRESHOLD;
+      rageVignette.style.opacity = vigAlpha;
+      rageVignette.style.background = `radial-gradient(ellipse at center,
+        transparent 20%,
+        ${angerColors[rageCount] || 'transparent'} 60%,
+        rgba(200,0,0,${vigAlpha * 0.85}) 100%)`;
+
+      // Meter badge
+      rageLevelEl.textContent = rageCount;
+      if (rageCount > 0) {
+        rageMeter.classList.add('visible');
+      } else {
+        rageMeter.classList.remove('visible');
+        rageVignette.style.opacity = 0;
+      }
+
+      // Canvas glitch when angry
+      if (rageCount >= 4) {
+        canvasEl.classList.add('angry');
+      } else {
+        canvasEl.classList.remove('angry');
+      }
+
+      // Intensify eye light
+      coreEnergyLight.intensity = 3.5 + rageCount * 1.2;
+      if (rageCount >= 4) {
+        coreEnergyLight.color.set(new THREE.Color(
+          `hsl(${Math.max(0, 180 - rageCount * 30)}, 100%, 60%)`
+        ));
+      }
+    }
+
+    function triggerRageBlast() {
+      if (blastActive) return;
+      blastActive = true;
+      canvasEl.classList.remove('angry');
+
+      const mc        = document.getElementById('main-content');
+      const hangDiv   = document.getElementById('rage-hang');
+      const barFill   = document.getElementById('rage-bar-fill');
+
+      // ── Setup blast canvas ──
+      const blastCanvas   = document.createElement('canvas');
+      blastCanvas.width   = window.innerWidth;
+      blastCanvas.height  = window.innerHeight;
+      rageOverlay.innerHTML = '';
+      rageOverlay.appendChild(blastCanvas);
+      const bctx = blastCanvas.getContext('2d');
+
+      // Cyborg eyes go full white / red
+      coreEnergyLight.color.set(0xff0000);
+      coreEnergyLight.intensity = 35;
+
+      let blastFrame       = 0;
+      const totalBlastFrames = 165; // ~2.75s at 60fps
+
+      function drawBlast() {
+        blastFrame++;
+        const w = blastCanvas.width, h = blastCanvas.height;
+        const progress = blastFrame / totalBlastFrames;
+        bctx.clearRect(0, 0, w, h);
+
+        /* ── PHASE 1 (0–10%): White flash expands outward ── */
+        if (progress < 0.10) {
+          const t = progress / 0.10;
+          bctx.fillStyle = `rgba(255,255,255,${t * 0.95})`;
+          bctx.fillRect(0, 0, w, h);
+          const rg = bctx.createRadialGradient(w/2,h/2,0, w/2,h/2, w*0.9*t);
+          rg.addColorStop(0,   'rgba(255,200,200,0.9)');
+          rg.addColorStop(0.5, 'rgba(255,0,0,0.5)');
+          rg.addColorStop(1,   'rgba(255,0,0,0)');
+          bctx.fillStyle = rg;
+          bctx.fillRect(0, 0, w, h);
+        }
+
+        /* ── PHASE 2 (10–45%): FULL BLINDING RED ── */
+        else if (progress < 0.45) {
+          const t = (progress - 0.10) / 0.35;
+
+          // Solid deep red base — the "blurred red" effect
+          bctx.fillStyle = `rgba(180,0,0,0.96)`;
+          bctx.fillRect(0, 0, w, h);
+
+          // Apply red blur to main content at blast start
+          if (blastFrame === 7) {
+            mc.classList.add('rage-blur');
+            mc.classList.remove('rage-blur-recover');
+          }
+
+          // Red radial bloom from center
+          const bloom = bctx.createRadialGradient(w/2,h/2,0, w/2,h/2, w*0.65);
+          bloom.addColorStop(0,   `rgba(255,100,80,${0.8 - t*0.4})`);
+          bloom.addColorStop(0.4, `rgba(200,0,0,${0.6 - t*0.2})`);
+          bloom.addColorStop(1,   'rgba(100,0,0,0)');
+          bctx.fillStyle = bloom;
+          bctx.fillRect(0, 0, w, h);
+
+          // Crackling red-white lightning bursts
+          for (let i = 0; i < 22; i++) {
+            const angle = (i / 22) * Math.PI * 2 + blastFrame * 0.05;
+            const len   = 120 + Math.random() * 260;
+            const cx = w/2, cy = h/2;
+            bctx.strokeStyle = `rgba(255,${Math.floor(Math.random()*80)},${Math.floor(Math.random()*40)},${0.5 + Math.random()*0.45})`;
+            bctx.lineWidth   = 1 + Math.random() * 3;
+            bctx.shadowColor = '#ff0000';
+            bctx.shadowBlur  = 24;
+            bctx.beginPath();
+            bctx.moveTo(cx, cy);
+            const ex = cx + Math.cos(angle)*len;
+            const ey = cy + Math.sin(angle)*len;
+            for (let s = 1; s <= 6; s++) {
+              const st = s/6;
+              bctx.lineTo(
+                cx + (ex-cx)*st + (Math.random()-0.5)*80,
+                cy + (ey-cy)*st + (Math.random()-0.5)*80
+              );
+            }
+            bctx.stroke();
+            bctx.shadowBlur = 0;
+          }
+
+          // Scanlines
+          for (let sy = 0; sy < h; sy += 3) {
+            bctx.fillStyle = 'rgba(0,0,0,0.07)';
+            bctx.fillRect(0, sy, w, 1.5);
+          }
+
+          // Heavy shake
+          if (blastFrame % 2 === 0) {
+            mc.style.transform = `translate(${(Math.random()-0.5)*22}px,${(Math.random()-0.5)*16}px)`;
+          }
+        }
+
+        /* ── PHASE 3 (45–72%): RED HOLD — static red blur ── */
+        else if (progress < 0.72) {
+          const t = (progress - 0.45) / 0.27;
+          // Dark red — fading slightly
+          const a = 0.9 - t * 0.35;
+          bctx.fillStyle = `rgba(140,0,0,${a})`;
+          bctx.fillRect(0, 0, w, h);
+
+          // Red noise texture
+          const imgData = bctx.createImageData(w, h);
+          for (let px = 0; px < imgData.data.length; px += 4) {
+            const noise = Math.random() * 40;
+            imgData.data[px]   = 80 + noise;
+            imgData.data[px+1] = 0;
+            imgData.data[px+2] = 0;
+            imgData.data[px+3] = Math.floor(a * 120);
+          }
+          bctx.putImageData(imgData, 0, 0);
+
+          // Glitch bands
+          if (blastFrame % 6 < 2) {
+            const gy = Math.random() * h;
+            bctx.fillStyle = `rgba(255,80,80,0.4)`;
+            bctx.fillRect(0, gy, w, 4 + Math.random() * 12);
+          }
+
+          mc.style.transform = '';
+        }
+
+        /* ── PHASE 4 (72–88%): FADE OUT — reveal the hang ── */
+        else if (progress < 0.88) {
+          const t   = (progress - 0.72) / 0.16;
+          const a   = 1 - t;
+          bctx.fillStyle = `rgba(80,0,0,${a * 0.7})`;
+          bctx.fillRect(0, 0, w, h);
+
+          // Trigger blur recovery + show hang
+          if (blastFrame === Math.floor(totalBlastFrames * 0.72) + 1) {
+            mc.classList.remove('rage-blur');
+            mc.classList.add('rage-blur-recover');
+          }
+        }
+
+        /* ── PHASE 5 (88–100%): Hold clear while hang is visible ── */
+        else {
+          bctx.clearRect(0, 0, w, h);
+        }
+
+        if (blastFrame < totalBlastFrames) {
+          requestAnimationFrame(drawBlast);
+        } else {
+          // ── Clean up blast canvas ──
+          rageOverlay.innerHTML = '';
+          mc.style.transform = '';
+          mc.classList.remove('rage-blur');
+          mc.classList.add('rage-blur-recover');
+          setTimeout(() => mc.classList.remove('rage-blur-recover'), 1900);
+
+          // ── SHOW HANG SCREEN ──
+          showHangScreen();
+        }
+      }
+
+      requestAnimationFrame(drawBlast);
+    }
+
+    /* ══ HANG SCREEN — simulates system freeze after overload ══ */
+    function showHangScreen() {
+      const mc      = document.getElementById('main-content');
+      const hangDiv = document.getElementById('rage-hang');
+      const barFill = document.getElementById('rage-bar-fill');
+
+      const HANG_DURATION = 3800; // ms the screen is "hung"
+
+      // Freeze the main content scroll/interaction
+      document.body.style.overflow = 'hidden';
+
+      // Build static noise canvas
+      const hangCanvas        = document.createElement('canvas');
+      hangCanvas.width        = window.innerWidth;
+      hangCanvas.height       = window.innerHeight;
+      hangDiv.insertBefore(hangCanvas, hangDiv.firstChild);
+      const hctx = hangCanvas.getContext('2d');
+
+      hangDiv.style.display   = 'block';
+      hangDiv.style.opacity   = '0';
+      hangDiv.style.transition = 'opacity 0.3s ease';
+      requestAnimationFrame(() => { hangDiv.style.opacity = '1'; });
+
+      // Animate static noise + reboot bar
+      let hangFrame = 0;
+      let barPct    = 0;
+      const hangStart = performance.now();
+
+      function drawHang(now) {
+        const elapsed = now - hangStart;
+        const hprog   = Math.min(elapsed / HANG_DURATION, 1);
+        hangFrame++;
+
+        const w = hangCanvas.width, h = hangCanvas.height;
+
+        // ── Dark red tinted static noise ──
+        const imgData = hctx.createImageData(w, h);
+        for (let px = 0; px < imgData.data.length; px += 4) {
+          const v = Math.random() * 30;
+          imgData.data[px]   = 20 + v + Math.random() * 15;  // R — slightly red tinted
+          imgData.data[px+1] = Math.random() * 6;
+          imgData.data[px+2] = Math.random() * 6;
+          imgData.data[px+3] = 200;
+        }
+        hctx.putImageData(imgData, 0, 0);
+
+        // ── Horizontal glitch bands ──
+        if (Math.random() > 0.55) {
+          const gy = Math.random() * h;
+          const gh = 2 + Math.random() * 14;
+          hctx.fillStyle = `rgba(255,0,0,${0.15 + Math.random() * 0.2})`;
+          hctx.fillRect(0, gy, w, gh);
+          // Offset copy for glitch displacement
+          hctx.drawImage(hangCanvas, 0, gy, w*0.6, gh,
+            (Math.random()-0.5)*30, gy, w*0.6, gh);
+        }
+
+        // ── Corrupted text rows ──
+        if (hangFrame % 8 === 0) {
+          hctx.font = '11px "Courier New"';
+          hctx.fillStyle = `rgba(255,40,40,${0.3 + Math.random()*0.4})`;
+          for (let tr = 0; tr < 6; tr++) {
+            const tx = Math.random() * (w - 200);
+            const ty = Math.random() * h;
+            const corrupted = Array.from({length: 28}, () =>
+              '▓░▒█■□01AB FF ERR CORE ÿ╬╠'.charAt(
+                Math.floor(Math.random() * 28)
+              )
+            ).join('');
+            hctx.fillText(corrupted, tx, ty);
+          }
+        }
+
+        // ── Reboot progress bar ──
+        barPct = hprog * 100;
+        barFill.style.width = barPct + '%';
+
+        if (hprog < 1) {
+          requestAnimationFrame(drawHang);
+        } else {
+          // ── EXIT HANG ──
+          hangDiv.style.opacity = '0';
+          setTimeout(() => {
+            hangDiv.style.display = 'none';
+            hangDiv.removeChild(hangCanvas);
+            barFill.style.width = '0%';
+            document.body.style.overflow = '';
+
+            // Final recovery: smooth un-blur + restore state
+            mc.classList.remove('rage-blur', 'rage-blur-recover');
+            blastActive = false;
+            rageCount   = 0;
+            updateRageUI();
+            coreEnergyLight.color.set(0x00f7ff);
+            coreEnergyLight.intensity = 3.5;
+          }, 350);
+        }
+      }
+
+      requestAnimationFrame(drawHang);
+    }
+
+    // Click counter on the cyborg canvas
+    canvasEl.addEventListener('click', () => {
+      if (blastActive) return;
+
+      rageCount = Math.min(rageCount + 1, RAGE_THRESHOLD);
+      updateRageUI();
+
+      // Clear and restart decay timer
+      clearTimeout(rageDecayTimer);
+      rageDecayTimer = setTimeout(() => {
+        if (!blastActive) {
+          rageCount = Math.max(0, rageCount - 1);
+          updateRageUI();
+        }
+      }, RAGE_DECAY_MS);
+
+      // Trigger blast at threshold
+      if (rageCount >= RAGE_THRESHOLD) {
+        clearTimeout(rageDecayTimer);
+        // Small delay so the last vignette flash is visible
+        setTimeout(() => triggerRageBlast(), 180);
+      }
+
+      // Quick reactive jolt on cyborg
+      cyborgGroup.rotation.y += (Math.random() - 0.5) * 0.18 * (rageCount / RAGE_THRESHOLD);
+      cyborgGroup.rotation.x += (Math.random() - 0.5) * 0.10 * (rageCount / RAGE_THRESHOLD);
+    });
+
+    // ═══════════════════════════════════════════════════════
+    // CYBERTRUCK HUD — live data animation
+    // ═══════════════════════════════════════════════════════
+    (function initHUD() {
+      const hudEl = document.getElementById('cyborg-hud');
+      if (!hudEl) return;
+
+      /* ── 1. MAIN CANVAS: Binary Rain + Neural Net + Hex Grid ── */
+      const mainCvs = document.getElementById('hud-canvas');
+      function resizeMain() {
+        mainCvs.width  = hudEl.offsetWidth;
+        mainCvs.height = hudEl.offsetHeight;
+      }
+      resizeMain();
+      window.addEventListener('resize', resizeMain);
+      const mc = mainCvs.getContext('2d');
+
+      // Binary rain columns
+      const COL_W = 14;
+      const cols  = Math.ceil(mainCvs.width / COL_W);
+      const drops = Array.from({length: cols}, () => Math.random() * -40);
+      const rainChars = '01アイウカキNXΩΔ▓░';
+
+      // Neural network nodes (random positions)
+      const NODES = Array.from({length: 22}, () => ({
+        x: 0.1 + Math.random() * 0.8,
+        y: 0.1 + Math.random() * 0.8,
+        r: 1.5 + Math.random() * 2,
+        phase: Math.random() * Math.PI * 2,
+        speed: 0.4 + Math.random() * 0.8,
+        connected: []
+      }));
+      // Build edges (connect nearby nodes)
+      NODES.forEach((n, i) => {
+        NODES.forEach((m, j) => {
+          if (i !== j) {
+            const dx = n.x - m.x, dy = n.y - m.y;
+            if (Math.hypot(dx, dy) < 0.28) n.connected.push(j);
+          }
+        });
+      });
+
+      let hudFrame = 0;
+      function tickMain() {
+        hudFrame++;
+        const W = mainCvs.width, H = mainCvs.height;
+        mc.clearRect(0, 0, W, H);
+
+        // ── Binary rain (very faint, full canvas) ──
+        mc.font = '9px "Courier New"';
+        for (let c = 0; c < cols; c++) {
+          const ch = rainChars[Math.floor(Math.random() * rainChars.length)];
+          const x  = c * COL_W;
+          const y  = drops[c] * COL_W;
+          // head character — brighter
+          mc.fillStyle = 'rgba(0,247,255,0.55)';
+          mc.fillText(ch, x, y);
+          // trail
+          mc.fillStyle = 'rgba(0,247,255,0.07)';
+          mc.fillText(rainChars[Math.floor(Math.random() * rainChars.length)], x, y - COL_W);
+          drops[c]++;
+          if (drops[c] * COL_W > H && Math.random() > 0.96) drops[c] = 0;
+        }
+
+        // ── Neural network graph ──
+        const t = hudFrame * 0.012;
+        NODES.forEach((n, i) => {
+          const px = n.x * W, py = n.y * H;
+          const pulse = Math.sin(t * n.speed + n.phase) * 0.5 + 0.5;
+          // Edges
+          n.connected.forEach(j => {
+            const m  = NODES[j];
+            const ep = Math.sin(t * 0.5 + i * 0.3) * 0.5 + 0.5;
+            mc.strokeStyle = `rgba(0,247,255,${0.04 + ep * 0.06})`;
+            mc.lineWidth   = 0.6;
+            mc.beginPath();
+            mc.moveTo(px, py);
+            mc.lineTo(m.x * W, m.y * H);
+            mc.stroke();
+          });
+          // Node dot
+          mc.fillStyle = `rgba(${pulse > 0.7 ? '255,0,127' : '0,247,255'},${0.15 + pulse * 0.35})`;
+          mc.beginPath();
+          mc.arc(px, py, n.r * (0.8 + pulse * 0.4), 0, Math.PI * 2);
+          mc.fill();
+        });
+
+        // ── Hex grid flash (periodic) ──
+        const hexAlpha = Math.max(0, Math.sin(hudFrame * 0.008) * 0.06);
+        if (hexAlpha > 0.005) {
+          mc.strokeStyle = `rgba(0,247,255,${hexAlpha})`;
+          mc.lineWidth   = 0.6;
+          const R = 22, hexH = R * Math.sqrt(3);
+          for (let row = -1; row < H / hexH * 2 + 1; row++) {
+            for (let col = -1; col < W / (R * 1.5) + 1; col++) {
+              const hx = col * R * 1.5;
+              const hy = row * hexH * 0.5 + (col % 2) * hexH * 0.5;
+              mc.beginPath();
+              for (let v = 0; v < 6; v++) {
+                const a = Math.PI / 3 * v;
+                v === 0
+                  ? mc.moveTo(hx + R * 0.9 * Math.cos(a), hy + R * 0.9 * Math.sin(a))
+                  : mc.lineTo(hx + R * 0.9 * Math.cos(a), hy + R * 0.9 * Math.sin(a));
+              }
+              mc.closePath();
+              mc.stroke();
+            }
+          }
+        }
+
+        requestAnimationFrame(tickMain);
+      }
+      tickMain();
+
+      /* ── 2. RADAR CANVAS ── */
+      const radarCvs = document.getElementById('hud-radar-canvas');
+      if (radarCvs) {
+        radarCvs.width  = 80;
+        radarCvs.height = 80;
+        const rc   = radarCvs.getContext('2d');
+        const cx   = 40, cy = 40, rr = 36;
+        let   angle = 0;
+        // Blips (random fixed positions in polar coords)
+        const blips = Array.from({length: 5}, () => ({
+          a: Math.random() * Math.PI * 2,
+          d: 0.2 + Math.random() * 0.75,
+          fade: 0
+        }));
+        function tickRadar() {
+          rc.clearRect(0, 0, 80, 80);
+          // Background
+          const bg = rc.createRadialGradient(cx, cy, 0, cx, cy, rr);
+          bg.addColorStop(0,   'rgba(0,247,255,0.04)');
+          bg.addColorStop(1,   'rgba(0,0,0,0.6)');
+          rc.fillStyle = bg;
+          rc.beginPath(); rc.arc(cx, cy, rr, 0, Math.PI * 2); rc.fill();
+          // Grid rings
+          [0.33, 0.66, 1].forEach(f => {
+            rc.strokeStyle = 'rgba(0,247,255,0.12)';
+            rc.lineWidth   = 0.5;
+            rc.beginPath(); rc.arc(cx, cy, rr * f, 0, Math.PI * 2); rc.stroke();
+          });
+          // Crosshairs
+          rc.strokeStyle = 'rgba(0,247,255,0.1)';
+          rc.lineWidth   = 0.5;
+          rc.beginPath(); rc.moveTo(cx - rr, cy); rc.lineTo(cx + rr, cy); rc.stroke();
+          rc.beginPath(); rc.moveTo(cx, cy - rr); rc.lineTo(cx, cy + rr); rc.stroke();
+          // Sweep trail
+          for (let i = 0; i < 30; i++) {
+            const sa = angle - (i / 30) * (Math.PI * 0.7);
+            const alpha = (1 - i / 30) * 0.22;
+            rc.strokeStyle = `rgba(0,247,255,${alpha})`;
+            rc.lineWidth   = 2;
+            rc.beginPath();
+            rc.moveTo(cx, cy);
+            rc.lineTo(cx + Math.cos(sa) * rr, cy + Math.sin(sa) * rr);
+            rc.stroke();
+          }
+          // Sweep line
+          rc.strokeStyle = 'rgba(0,247,255,0.7)';
+          rc.lineWidth   = 1;
+          rc.beginPath();
+          rc.moveTo(cx, cy);
+          rc.lineTo(cx + Math.cos(angle) * rr, cy + Math.sin(angle) * rr);
+          rc.stroke();
+          // Blips
+          blips.forEach(b => {
+            const diff = ((angle - b.a) % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2);
+            if (diff < 0.15) b.fade = 1;
+            if (b.fade > 0) {
+              const bx = cx + Math.cos(b.a) * rr * b.d;
+              const by = cy + Math.sin(b.a) * rr * b.d;
+              rc.fillStyle = `rgba(0,247,255,${b.fade * 0.9})`;
+              rc.beginPath(); rc.arc(bx, by, 2.5, 0, Math.PI * 2); rc.fill();
+              b.fade = Math.max(0, b.fade - 0.008);
+            }
+          });
+          angle = (angle + 0.025) % (Math.PI * 2);
+          requestAnimationFrame(tickRadar);
+        }
+        tickRadar();
+      }
+
+      /* ── 3. BIOMETRIC WAVEFORM ── */
+      const waveCvs = document.getElementById('hud-wave-canvas');
+      if (waveCvs) {
+        waveCvs.width  = 90;
+        waveCvs.height = 36;
+        const wc   = waveCvs.getContext('2d');
+        const pts  = Array(90).fill(18);
+        let wt     = 0;
+        function tickWave() {
+          wt += 0.12;
+          pts.shift();
+          // ECG-like signal: flat with occasional spike
+          const phase = wt % (Math.PI * 4);
+          let v = 18;
+          if (phase < 0.3)      v = 18 - Math.sin(phase / 0.3 * Math.PI) * 14;
+          else if (phase < 0.5) v = 18 + Math.sin((phase - 0.3) / 0.2 * Math.PI) * 8;
+          else if (phase < 0.7) v = 18;
+          else                  v = 18 + Math.sin((phase - 0.7) * 2) * 2;
+          pts.push(v);
+
+          wc.clearRect(0, 0, 90, 36);
+          wc.strokeStyle = '#ff007f';
+          wc.shadowColor = '#ff007f';
+          wc.shadowBlur  = 6;
+          wc.lineWidth   = 1.2;
+          wc.beginPath();
+          pts.forEach((p, i) => i === 0 ? wc.moveTo(i, p) : wc.lineTo(i, p));
+          wc.stroke();
+          wc.shadowBlur = 0;
+          requestAnimationFrame(tickWave);
+        }
+        tickWave();
+      }
+
+      /* ── 4. SYSTEM LOG ── */
+      const logEl = document.getElementById('hud-log');
+      const logLines = [
+        { t: 'ok',   m: 'BOOT OK · v4.7.1'      },
+        { t: 'ok',   m: 'NEURAL LINK STABLE'     },
+        { t: 'ok',   m: 'OCULAR ARRAY ONLINE'    },
+        { t: 'warn', m: 'THREAT SCAN: NOMINAL'   },
+        { t: 'ok',   m: 'KINETIC CORE: 98%'      },
+        { t: 'warn', m: 'PACKET LOSS: 0.2%'      },
+        { t: 'ok',   m: 'DERMAL SENSORS: ACTIVE' },
+        { t: 'err',  m: 'AUTH ATTEMPT BLOCKED'   },
+        { t: 'ok',   m: 'FIREWALL: UPDATED'      },
+        { t: 'ok',   m: 'GPS: LOCK CONFIRMED'    },
+        { t: 'warn', m: 'SYNAPTIC DRIFT: 0.4ms'  },
+        { t: 'ok',   m: 'ENCRYPTION: AES-512'    },
+      ];
+      let logIdx = 0;
+      function pushLog() {
+        if (!logEl) return;
+        const entry = logLines[logIdx % logLines.length];
+        logIdx++;
+        const span = document.createElement('span');
+        span.className = 'hud-log-line ' + entry.t;
+        const prefix = entry.t === 'ok' ? '▸' : entry.t === 'warn' ? '⚠' : '✕';
+        span.textContent = prefix + ' ' + entry.m;
+        logEl.appendChild(span);
+        // Keep only 6 lines
+        while (logEl.children.length > 6) logEl.removeChild(logEl.firstChild);
+        setTimeout(pushLog, 1400 + Math.random() * 1800);
+      }
+      setTimeout(pushLog, 400);
+
+      /* ── 5. STATUS BADGE & COORD cycling ── */
+      const statusEl = document.getElementById('hud-status');
+      const statuses = [
+        { label: 'SYS: ONLINE',    color: '#00f7ff', shadow: '#00f7ff', bg: 'rgba(0,247,255,0.10)' },
+        { label: 'NEURAL: SYNC',   color: '#00f7ff', shadow: '#00f7ff', bg: 'rgba(0,247,255,0.10)' },
+        { label: 'SCAN: ACTIVE',   color: '#ff8c00', shadow: '#ff8c00', bg: 'rgba(255,140,0,0.10)' },
+        { label: 'THREAT: CLEAR',  color: '#00f7ff', shadow: '#00f7ff', bg: 'rgba(0,247,255,0.10)' },
+        { label: 'UPLINK: SECURE', color: '#a855f7', shadow: '#a855f7', bg: 'rgba(168,85,247,0.10)' },
+      ];
+      let statusIdx = 0;
+      function cycleStatus() {
+        if (!statusEl) return;
+        const s = statuses[statusIdx % statuses.length];
+        statusIdx++;
+        statusEl.textContent = s.label;
+        statusEl.style.color      = s.color;
+        statusEl.style.textShadow = `0 0 8px ${s.shadow}`;
+        statusEl.style.background = s.bg;
+        statusEl.style.border     = `1px solid ${s.color}44`;
+      }
+      cycleStatus();
+      setInterval(cycleStatus, 3500);
+
+      /* ── 6. LIVE COORDINATE FLICKER ── */
+      const coordBl = document.getElementById('hud-coord-bl');
+      const coordBr = document.getElementById('hud-coord-br');
+      function jitterCoord() {
+        if (coordBl) {
+          const lat = (35.6 + (Math.random() - 0.5) * 0.002).toFixed(4);
+          const lon = (139.7 + (Math.random() - 0.5) * 0.002).toFixed(4);
+          coordBl.textContent = `LAT:${lat}°N LON:${lon}°E`;
+        }
+        if (coordBr) {
+          const alt = Math.floor(312 + (Math.random() - 0.5) * 4);
+          coordBr.textContent = `ALT:+${alt}m UTC:+09`;
+        }
+      }
+      setInterval(jitterCoord, 1800);
+
+      /* ── 7. BAR + READOUT live animation ── */
+      const readings = {
+        neural:  { vals: ['98.4%','99.1%','97.8%','98.9%','99.6%'],         bars: [98,99,97,98,99] },
+        synapse: { vals: ['10.0Gb','9.8Gb','10.2Gb','9.7Gb','10.5Gb'],      bars: [82,78,86,75,90] },
+        kinetic: { vals: ['72HR','68HR','71HR','74HR','70HR'],               bars: [60,55,58,65,57] },
+        threat:  { vals: ['LOW','LOW','LOW','MED','LOW','LOW'],              bars: [12,10,12,35,10,12] },
+      };
+      function rand(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+      setInterval(() => {
+        ['neural','synapse','kinetic','threat'].forEach(k => {
+          const d  = readings[k];
+          const vi = Math.floor(Math.random() * d.vals.length);
+          const el = document.getElementById('hud-' + k);
+          const bar = document.getElementById('hud-bar-' + k);
+          if (el)  el.textContent  = d.vals[vi];
+          if (bar) bar.style.width = d.bars[vi] + '%';
+          if (k === 'threat' && el) {
+            const isMed = d.vals[vi] === 'MED';
+            el.style.color      = isMed ? '#ff8c00' : '#00f7ff';
+            el.style.textShadow = `0 0 8px ${isMed ? '#ff8c00' : '#00f7ff'}`;
+          }
+        });
+      }, 2200);
+
+      /* ── 8. DATA STREAM TEXT ── */
+      const sc = '01ABCDEFアイウエカキNXZΩΔΨ▓░▒■□╬╠╣FF00CYBORG//SYS\nERR\nOK\n';
+      function makeStream() {
+        let o = '';
+        for (let i = 0; i < 120; i++) o += sc[Math.floor(Math.random() * sc.length)];
+        return o + o;
+      }
+      const sl = document.getElementById('hud-stream-l-inner');
+      const sr = document.getElementById('hud-stream-r-inner');
+      if (sl) sl.textContent = makeStream();
+      if (sr) sr.textContent = makeStream();
+      setInterval(() => {
+        if (sl) sl.textContent = makeStream();
+        if (sr) sr.textContent = makeStream();
+      }, 7000);
+    })();
+
+    // ═══════════════════════════════════════════════════════
+
+    // ═══════════════════════════════════════════════════════
+    // --- Interactive Accordion Logic ---
+    const faqTriggers = document.querySelectorAll('.faq-trigger');
+    faqTriggers.forEach(trigger => {
+      trigger.addEventListener('click', () => {
+        const item = trigger.parentElement;
+        item.classList.toggle('active');
+        
+        document.querySelectorAll('.faq-item').forEach(otherItem => {
+          if (otherItem !== item) {
+            otherItem.classList.remove('active');
+          }
+        });
+      });
+    });
+
+    // --- Mini Cyborg Cursor ---
+    const miniCyborg = document.getElementById('mini-cyborg-cursor');
+    const isTouchDevice = window.matchMedia('(pointer: coarse)').matches;
+    let cursorDisplayX = window.innerWidth / 2;
+    let cursorDisplayY = window.innerHeight / 2;
+
+    if (!isTouchDevice) {
+      document.body.classList.add('custom-cursor-active');
+      let cursorX = window.innerWidth / 2;
+      let cursorY = window.innerHeight / 2;
+      let displayX = cursorX;
+      let displayY = cursorY;
+
+      document.addEventListener('mousemove', (e) => {
+        cursorX = e.clientX;
+        cursorY = e.clientY;
+      });
+
+      function tickCursor() {
+        displayX += (cursorX - displayX) * 0.28;
+        displayY += (cursorY - displayY) * 0.28;
+        cursorDisplayX = displayX;
+        cursorDisplayY = displayY;
+        miniCyborg.style.left = displayX + 'px';
+        miniCyborg.style.top = displayY + 'px';
+        requestAnimationFrame(tickCursor);
+      }
+      tickCursor();
+
+      document.addEventListener('mousedown', () => miniCyborg.classList.add('clicking'));
+      document.addEventListener('mouseup', () => miniCyborg.classList.remove('clicking'));
+    } else {
+      miniCyborg.style.display = 'none';
+    }
+
+    function getLaserOrigin(clickX, clickY) {
+      if (!isTouchDevice) {
+        return { x: cursorDisplayX + 16, y: cursorDisplayY - 12 };
+      }
+      return { x: clickX, y: clickY };
+    }
+
+    function fireCyborgLaser(originX, originY, targetX, targetY, onImpact) {
+      const dx = targetX - originX;
+      const dy = targetY - originY;
+      const length = Math.hypot(dx, dy);
+      if (length < 4) {
+        onImpact();
+        return;
+      }
+
+      const angle = Math.atan2(dy, dx) * (180 / Math.PI);
+      const laser = document.createElement('div');
+      laser.className = 'cyborg-laser';
+      laser.style.left = originX + 'px';
+      laser.style.top = originY + 'px';
+      laser.style.width = length + 'px';
+      laser.style.setProperty('--laser-angle', angle + 'deg');
+      laser.innerHTML = '<span class="cyborg-laser-glow"></span><span class="cyborg-laser-core"></span>';
+      shipLayer.appendChild(laser);
+
+      if (!isTouchDevice) miniCyborg.classList.add('firing');
+      requestAnimationFrame(() => laser.classList.add('laser-active'));
+
+      setTimeout(() => {
+        onImpact();
+        if (!isTouchDevice) miniCyborg.classList.remove('firing');
+      }, 165);
+
+      setTimeout(() => laser.remove(), 300);
+    }
+
+    function spawnLaserImpact(x, y) {
+      const impact = document.createElement('span');
+      impact.className = 'laser-impact';
+      impact.style.left = x + 'px';
+      impact.style.top = y + 'px';
+      shipLayer.appendChild(impact);
+      setTimeout(() => impact.remove(), 400);
+    }
+
+    // --- 7. Frame Rendering Loop Engine ---
+    const runtimeClock = new THREE.Clock();
+
+    function animate() {
+      requestAnimationFrame(animate);
+      const delta = runtimeClock.getDelta();
+      const elapsed = runtimeClock.getElapsedTime();
+
+      currentPointer.x += (targetPointer.x - currentPointer.x) * 0.08;
+      currentPointer.y += (targetPointer.y - currentPointer.y) * 0.08;
+
+      // Animate Particles ambient depth movement
+      const pts = networkParticles.geometry.attributes.position.array;
+      for(let i=1; i<particleCount*3; i+=3) {
+        pts[i] -= delta * 0.15; 
+        if(pts[i] < -5) pts[i] = 5;
+      }
+      networkParticles.geometry.attributes.position.needsUpdate = true;
+      networkParticles.rotation.y = elapsed * 0.02;
+      networkParticles.rotation.x = currentPointer.y * 0.1;
+
+      // Cyborg Hover movement mechanics
+      cyborgGroup.position.y = -0.85 + Math.sin(elapsed * 1.4) * 0.04;
+      leftShoulderPod.position.y = 0.05 + Math.sin(elapsed * 2.0) * 0.012;
+      rightShoulderJoint.position.y = 0.05 + Math.cos(elapsed * 2.0) * 0.012;
+      
+      // Pulse eye glow and reactor core
+      const pulseFactor = 1.0 + Math.sin(elapsed * 5.5) * 0.15;
+      coreEnergyLight.intensity = 3.5 * pulseFactor;
+      reactorCore.scale.set(pulseFactor, pulseFactor, pulseFactor);
+      neuralGlowRing.scale.set(1.0 + Math.cos(elapsed * 3.0)*0.06, 1, 1.0 + Math.cos(elapsed * 3.0)*0.06);
+
+      if (!electricalStrikeActive) {
+        cyborgGroup.rotation.y = currentPointer.x * 0.38;
+        cyborgGroup.rotation.x = -currentPointer.y * 0.14;
+        
+        headMeshGroup.rotation.y += (currentPointer.x * 0.35 - headMeshGroup.rotation.y) * 0.1;
+        headMeshGroup.rotation.x += (-currentPointer.y * 0.25 - headMeshGroup.rotation.x) * 0.1;
+      } else {
+        headMeshGroup.rotation.y += (targetHeadRotY - headMeshGroup.rotation.y) * 0.15;
+        headMeshGroup.rotation.x += (targetHeadRotX - headMeshGroup.rotation.x) * 0.15;
+      }
+
+      // --- Lightning Ray Generation Engine ---
+      if (electricalStrikeActive) {
+        strikeTimer += delta;
+
+        if(strikeTimer < totalStrikeDuration) {
+          rightMonocleLens.getWorldPosition(beamOriginPos);
+          const positions = lightningLine.geometry.attributes.position.array;
+          
+          for (let i = 0; i < lightningSegmentsCount; i++) {
+            const progressRatio = i / (lightningSegmentsCount - 1);
+            
+            const currentSegmentX = beamOriginPos.x + (beamDestinationPos.x - beamOriginPos.x) * progressRatio;
+            const currentSegmentY = beamOriginPos.y + (beamDestinationPos.y - beamOriginPos.y) * progressRatio;
+            const currentSegmentZ = beamOriginPos.z + (beamDestinationPos.z - beamOriginPos.z) * progressRatio;
+
+            if (i > 0 && i < lightningSegmentsCount - 1) {
+              const varianceAmplitude = 0.25; 
+              positions[i * 3] = currentSegmentX + (Math.random() - 0.5) * varianceAmplitude;
+              positions[i * 3 + 1] = currentSegmentY + (Math.random() - 0.5) * varianceAmplitude;
+              positions[i * 3 + 2] = currentSegmentZ + (Math.random() - 0.5) * varianceAmplitude;
+            } else {
+              positions[i * 3] = currentSegmentX;
+              positions[i * 3 + 1] = currentSegmentY;
+              positions[i * 3 + 2] = currentSegmentZ;
+            }
+          }
+          lightningLine.geometry.attributes.position.needsUpdate = true;
+          lightningMaterial.opacity = Math.random() > 0.2 ? 1.0 : 0.3; 
+        } else {
+          electricalStrikeActive = false;
+          lightningMaterial.opacity = 0;
+
+          // Impact Events Execution
+          currentActiveBtn.classList.add('energized');
+          document.getElementById('main-content').classList.add('shake');
+          
+          setTimeout(() => {
+            currentActiveBtn.classList.remove('energized');
+            document.getElementById('main-content').classList.remove('shake');
+          }, 600);
+        }
+      } else {
+        lightningMaterial.opacity = 0;
+      }
+
+      renderer.render(scene, camera);
+    }
+
+    animate();
+
+    // ===================== SPACESHIP SYSTEM =====================
+    const shipLayer = document.getElementById('spaceship-layer');
+    const killCountEl = document.getElementById('kill-count');
+    let killCount = 0;
+    const activeShips = [];
+
+    // Spaceship SVG shapes — 3 variants for variety
+    function getShipSVG(variant, color1, color2) {
+      const svgs = [
+        // Variant 0 — classic saucer-fighter
+        `<svg viewBox="0 0 64 30" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="32" cy="18" rx="28" ry="9" fill="${color1}" opacity="0.9"/>
+          <ellipse cx="32" cy="15" rx="14" ry="6" fill="${color2}" opacity="0.95"/>
+          <ellipse cx="32" cy="12" rx="7" ry="4" fill="${color1}" opacity="0.8"/>
+          <polygon points="10,22 6,28 20,24" fill="${color2}" opacity="0.7"/>
+          <polygon points="54,22 58,28 44,24" fill="${color2}" opacity="0.7"/>
+          <circle class="engine-dot" cx="14" cy="24" r="3" fill="#00f7ff" opacity="0.9"/>
+          <circle class="engine-dot-2" cx="50" cy="24" r="3" fill="#00f7ff" opacity="0.9"/>
+          <circle cx="32" cy="14" r="2.5" fill="#ff007f" opacity="1"/>
+          <line x1="25" y1="18" x2="39" y2="18" stroke="${color2}" stroke-width="1" opacity="0.5"/>
+        </svg>`,
+        // Variant 1 — angular wedge fighter
+        `<svg viewBox="0 0 64 30" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="32,2 58,26 6,26" fill="${color1}" opacity="0.9"/>
+          <polygon points="32,8 50,26 14,26" fill="${color2}" opacity="0.7"/>
+          <polygon points="32,2 38,14 26,14" fill="${color2}" opacity="0.9"/>
+          <rect x="28" y="14" width="8" height="12" rx="1" fill="${color1}" opacity="0.8"/>
+          <circle class="engine-dot" cx="20" cy="26" r="3.5" fill="#ff007f" opacity="0.95"/>
+          <circle class="engine-dot-2" cx="44" cy="26" r="3.5" fill="#ff007f" opacity="0.95"/>
+          <circle cx="32" cy="10" r="2" fill="#00f7ff" opacity="1"/>
+        </svg>`,
+        // Variant 2 — twin-boom interceptor
+        `<svg viewBox="0 0 64 30" xmlns="http://www.w3.org/2000/svg">
+          <rect x="8" y="10" width="48" height="10" rx="3" fill="${color1}" opacity="0.9"/>
+          <polygon points="56,10 64,15 56,20" fill="${color2}" opacity="0.8"/>
+          <rect x="12" y="6" width="10" height="18" rx="2" fill="${color2}" opacity="0.8"/>
+          <rect x="42" y="6" width="10" height="18" rx="2" fill="${color2}" opacity="0.8"/>
+          <ellipse cx="32" cy="15" rx="8" ry="5" fill="${color1}" opacity="0.95"/>
+          <circle class="engine-dot" cx="14" cy="24" r="3" fill="#00f7ff" opacity="1"/>
+          <circle class="engine-dot-2" cx="50" cy="24" r="3" fill="#ff007f" opacity="1"/>
+          <rect x="28" y="12" width="8" height="6" rx="1" fill="${color2}" opacity="0.7"/>
+          <circle cx="32" cy="15" r="2" fill="#fff" opacity="0.9"/>
+        </svg>`,
+      ];
+      return svgs[variant];
+    }
+
+    const shipColorPalettes = [
+      ['#0d2a4a', '#00f7ff'],
+      ['#2a0d1a', '#ff007f'],
+      ['#1a2a0d', '#39ff14'],
+      ['#1a0d2a', '#bf00ff'],
+      ['#2a1a0d', '#ff6600'],
+    ];
+
+    function spawnShip() {
+      const el = document.createElement('div');
+      el.className = 'enemy-ship';
+
+      const palette = shipColorPalettes[Math.floor(Math.random() * shipColorPalettes.length)];
+      const variant = Math.floor(Math.random() * 3);
+      el.innerHTML = getShipSVG(variant, palette[0], palette[1]);
+
+      // Spawn on a random edge (left or right)
+      const fromLeft = Math.random() > 0.5;
+      const startY = 60 + Math.random() * (window.innerHeight - 160);
+      const speed = 60 + Math.random() * 90; // px/sec
+      const scale = 0.7 + Math.random() * 0.7;
+      const wobbleAmp = 12 + Math.random() * 20;
+      const wobbleFreq = 0.5 + Math.random() * 1.5;
+      const wobblePhase = Math.random() * Math.PI * 2;
+
+      let startX, direction;
+      if (fromLeft) {
+        startX = -80;
+        direction = 1;
+        el.style.transform = `scaleX(-1) scale(${scale})`;
+      } else {
+        startX = window.innerWidth + 80;
+        direction = -1;
+        el.style.transform = `scale(${scale})`;
+      }
+
+      el.style.left = startX + 'px';
+      el.style.top = startY + 'px';
+      el.style.width = Math.round(64 * scale) + 'px';
+      el.style.height = Math.round(30 * scale) + 'px';
+
+      shipLayer.appendChild(el);
+
+      const ship = {
+        el,
+        x: startX,
+        y: startY,
+        direction,
+        speed,
+        scale,
+        wobbleAmp,
+        wobbleFreq,
+        wobblePhase,
+        destroyed: false,
+        alive: true,
+        baseY: startY,
+      };
+
+      activeShips.push(ship);
+      return ship;
+    }
+
+    function destroyShip(ship, laserHitX, laserHitY) {
+      if (ship.destroyed) return;
+      ship.destroyed = true;
+      ship.alive = false;
+
+      const rect = ship.el.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+
+      // Remove ship
+      ship.el.classList.add('hit');
+      setTimeout(() => {
+        if (ship.el.parentNode) ship.el.parentNode.removeChild(ship.el);
+      }, 80);
+
+      // Explosion container
+      const exp = document.createElement('div');
+      exp.className = 'ship-explosion';
+      exp.style.left = cx + 'px';
+      exp.style.top = cy + 'px';
+      document.body.appendChild(exp);
+
+      // Rings
+      for (let r = 0; r < 2; r++) {
+        const ring = document.createElement('div');
+        ring.className = 'ship-explosion-ring';
+        ring.style.animationDelay = (r * 0.1) + 's';
+        exp.appendChild(ring);
+      }
+
+      // Core flash
+      const core = document.createElement('div');
+      core.className = 'ship-explosion-core';
+      exp.appendChild(core);
+
+      // Debris pieces
+      const debrisColors = ['#ff007f', '#00f7ff', '#ff6600', '#fff', '#ffff00'];
+      for (let d = 0; d < 10; d++) {
+        const deb = document.createElement('div');
+        deb.className = 'ship-debris';
+        const angle = (Math.PI * 2 * d) / 10 + (Math.random() - 0.5) * 0.8;
+        const dist = 30 + Math.random() * 55;
+        deb.style.setProperty('--dx', (Math.cos(angle) * dist) + 'px');
+        deb.style.setProperty('--dy', (Math.sin(angle) * dist) + 'px');
+        deb.style.setProperty('--dr', (Math.random() * 360) + 'deg');
+        deb.style.background = debrisColors[Math.floor(Math.random() * debrisColors.length)];
+        deb.style.left = '0px';
+        deb.style.top = '0px';
+        deb.style.width = (3 + Math.random() * 6) + 'px';
+        deb.style.height = (3 + Math.random() * 6) + 'px';
+        exp.appendChild(deb);
+      }
+
+      setTimeout(() => { if (exp.parentNode) exp.parentNode.removeChild(exp); }, 700);
+
+      // Score pop
+      killCount++;
+      killCountEl.textContent = killCount;
+      const pop = document.createElement('div');
+      pop.className = 'ship-score-pop';
+      pop.textContent = '+KILL';
+      pop.style.left = cx + 'px';
+      pop.style.top = (cy - 20) + 'px';
+      document.body.appendChild(pop);
+      setTimeout(() => { if (pop.parentNode) pop.parentNode.removeChild(pop); }, 850);
+
+      // Screen shake
+      document.getElementById('main-content').classList.add('shake');
+      setTimeout(() => document.getElementById('main-content').classList.remove('shake'), 400);
+    }
+
+    // Animate ships
+    let lastShipTime = 0;
+    const shipSpawnInterval = 2200; // ms between spawns
+    const MAX_SHIPS = 10;
+    let lastShipDelta = performance.now();
+
+    function tickShips(now) {
+      const delta = (now - lastShipDelta) / 1000;
+      lastShipDelta = now;
+
+      // Spawn new ships
+      if (now - lastShipTime > shipSpawnInterval && activeShips.filter(s => s.alive).length < MAX_SHIPS) {
+        spawnShip();
+        lastShipTime = now;
+      }
+
+      const elapsed = now / 1000;
+
+      for (let i = activeShips.length - 1; i >= 0; i--) {
+        const ship = activeShips[i];
+        if (!ship.alive) {
+          activeShips.splice(i, 1);
+          continue;
+        }
+
+        ship.x += ship.direction * ship.speed * delta;
+        const wobble = Math.sin(elapsed * ship.wobbleFreq + ship.wobblePhase) * ship.wobbleAmp;
+        ship.el.style.left = ship.x + 'px';
+        ship.el.style.top = (ship.baseY + wobble) + 'px';
+
+        // Remove if off-screen
+        if (ship.direction === 1 && ship.x > window.innerWidth + 100) {
+          if (ship.el.parentNode) ship.el.parentNode.removeChild(ship.el);
+          activeShips.splice(i, 1);
+        } else if (ship.direction === -1 && ship.x < -150) {
+          if (ship.el.parentNode) ship.el.parentNode.removeChild(ship.el);
+          activeShips.splice(i, 1);
+        }
+      }
+
+      requestAnimationFrame(tickShips);
+    }
+    requestAnimationFrame(tickShips);
+
+    // Spawn a few ships immediately on load
+    for (let i = 0; i < 4; i++) {
+      setTimeout(() => spawnShip(), i * 600);
+    }
+
+    // ===================== CLICK → LASER → BLAST SHIP =====================
+    function findNearestShip(x, y) {
+      let nearest = null;
+      let nearestDist = Infinity;
+      for (const ship of activeShips) {
+        if (!ship.alive) continue;
+        const rect = ship.el.getBoundingClientRect();
+        const cx = rect.left + rect.width / 2;
+        const cy = rect.top + rect.height / 2;
+        const dist = Math.hypot(cx - x, cy - y);
+        if (dist < nearestDist) {
+          nearestDist = dist;
+          nearest = ship;
+        }
+      }
+      // Only target ships within a reasonable range
+      return nearestDist < window.innerWidth * 0.85 ? nearest : null;
+    }
+
+    document.addEventListener('click', (e) => {
+      // Don't interfere with buttons or nav links
+      if (e.target.closest('nav a, .faq-trigger')) return;
+
+      const origin = getLaserOrigin(e.clientX, e.clientY);
+      const target = findNearestShip(e.clientX, e.clientY);
+
+      if (!target) return;
+
+      const rect = target.el.getBoundingClientRect();
+      const targetX = rect.left + rect.width / 2;
+      const targetY = rect.top + rect.height / 2;
+
+      fireCyborgLaser(origin.x, origin.y, targetX, targetY, () => {
+        spawnLaserImpact(targetX, targetY);
+        destroyShip(target, targetX, targetY);
+      });
+    });
+    // ===================== END SPACESHIP SYSTEM =====================
+
+    window.addEventListener('resize', () => {
+      camera.aspect = container.clientWidth / container.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(container.clientWidth, container.clientHeight);
+    });
+
+    // ═══════════════════════════════════════════════════════════════
+    // FUTURISTIC DOOR OPENING — Scroll-triggered reveal
+    // ═══════════════════════════════════════════════════════════════
+    const doorSections = document.querySelectorAll('.content-section');
+    
+    const doorObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          // Door slides open when section enters viewport
+          entry.target.classList.add('door-open');
+        } else {
+          // Door closes when section leaves viewport
+          entry.target.classList.remove('door-open');
+        }
+      });
+    }, {
+      threshold: 0.15, // Trigger when 15% of section is visible
+      rootMargin: '0px 0px -100px 0px' // Start slightly before section enters view
+    });
+
+    doorSections.forEach(section => {
+      doorObserver.observe(section);
+    });
+  </script>
+</body>
+</html>
